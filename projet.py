@@ -82,48 +82,52 @@ def rateMonotonic(WCET, tasks):
             tasksOnGoing[i].append(tasks[i][0][0])
             tasksOnGoing[i].append(tasks[i][0][1])
             tasksOnGoing[i].append("T" + str(i+1))
-    
 
-    onGoing = []
 
     while(len(tasksOnGoing) != 0):
+        onGoing = []
+        print("tasksOnGoing =", tasksOnGoing)
         for index in range(len(tasksOnGoing)):
-            if(tasksOnGoing[index][0] <= time):
-                onGoing.append(tasksOnGoing[index]) 
+            if(tasksOnGoing[index]!=[]):
+                if(tasksOnGoing[index][0] <= time):
+                    onGoing.append(tasksOnGoing[index])
 
         newTasksOnGoing = []
         for element in tasksOnGoing:
            if element not in onGoing:
             newTasksOnGoing.append(element)
         tasksOnGoing = newTasksOnGoing
-        print("newTasksOnGoing = ", tasksOnGoing)
+        print("OnGoing = ", onGoing)
 
         if(len(onGoing) != 0):
             onGoing.sort(key=lambda a: a[1])
             job = onGoing[0][3]
             index = int(job[1]) - 1
-            print("tasks == ", tasks)
-            print((int(onGoing[0][1]), int(onGoing[0][2])))
+            #print("tasks == ", tasks)
+            #print((int(onGoing[0][1]), int(onGoing[0][2])))
             tasks[index].remove((int(onGoing[0][1]), int(onGoing[0][2])))
             countOfJob[index] -= 1 
             if(countOfJob[index] == 0):
                 listOfTimes[index] = int(onGoing[0][1])
                 countOfJob[index] = WCET[index]
-            print("tasks == ", tasks)
+            #print("tasks == ", tasks)
             listRateMonotonic.append(job)
             time += 1
             del onGoing[0]
-            print(listRateMonotonic)
+            #print(listRateMonotonic)
         else:
-            break; 
+            break
         
-        print(listOfTimes, " is the list of times")
+        #print(listOfTimes, " is the list of times")
+        print(listRateMonotonic)
         print(addNewTask(listOfTimes, tasks))
-        #tasksOnGoing = addNewTask(listOfTimes, tasks)
+        print("-----------------------------------------------------")
+        tasksOnGoing = addNewTask(listOfTimes, tasks)
 
 def addNewTask(listOfTimes, tasks):
     tasksOnGoing = [[] for i in range(3)]
     for i in range(len(tasks)):
+        if(tasks[i] != []):
             tasksOnGoing[i].append(listOfTimes[i])
             tasksOnGoing[i].append(tasks[i][0][0])
             tasksOnGoing[i].append(tasks[i][0][1])
