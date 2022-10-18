@@ -71,9 +71,13 @@ def numberOfTasks(WCET, liste):
 
 def rateMonotonic(WCET, tasks):
     listRateMonotonic = []
-    listOfTimes = [0, 0, 0]
-    countOfJob = [3, 2, 2]
-    tasksOnGoing = [[] for i in range(3)]
+    listOfTimes = [0 for i in range(len(tasks))]
+    countOfJob = []
+    for element in WCET:
+        countOfJob.append(element)
+    print(countOfJob)
+    print(WCET, " is wcet")
+    tasksOnGoing = [[] for i in range(len(tasks))]
 
     time = 0
     if(time == 0):
@@ -86,7 +90,6 @@ def rateMonotonic(WCET, tasks):
 
     while(len(tasksOnGoing) != 0):
         onGoing = []
-        print("tasksOnGoing =", tasksOnGoing)
         for index in range(len(tasksOnGoing)):
             if(tasksOnGoing[index]!=[]):
                 if(tasksOnGoing[index][0] <= time):
@@ -97,7 +100,6 @@ def rateMonotonic(WCET, tasks):
            if element not in onGoing:
             newTasksOnGoing.append(element)
         tasksOnGoing = newTasksOnGoing
-        print("OnGoing = ", onGoing)
 
         if(len(onGoing) != 0):
             onGoing.sort(key=lambda a: a[1])
@@ -116,20 +118,21 @@ def rateMonotonic(WCET, tasks):
             del onGoing[0]
             #print(listRateMonotonic)
         else:
-            if(tasksOnGoing == [[], [], []]):
+            brouillon = [[] for i in range(len(tasksOnGoing))]
+            if(tasksOnGoing == brouillon):
                 break
             else:
-                print("times is = ", time)
                 time +=1
         
         #print(listOfTimes, " is the list of times")
-        print(listRateMonotonic)
-        print(addNewTask(listOfTimes, tasks))
-        print("-----------------------------------------------------")
+        #print(listRateMonotonic)
+        #print(addNewTask(listOfTimes, tasks))
+        #print("-----------------------------------------------------")
         tasksOnGoing = addNewTask(listOfTimes, tasks)
+    return listRateMonotonic
 
 def addNewTask(listOfTimes, tasks):
-    tasksOnGoing = [[] for i in range(3)]
+    tasksOnGoing = [[] for i in range(len(tasks))]
     for i in range(len(tasks)):
         if(tasks[i] != []):
             tasksOnGoing[i].append(listOfTimes[i])
@@ -145,7 +148,9 @@ def main():
     lcm = findLeastCommonMultiple(sorted(lists[1])) #Find the best lcm 
     listPeriodOfTasks = periodOfTasks(lcm, lists[1])
     listNumberOfTasks = numberOfTasks(lists[0], listPeriodOfTasks)
-    print(rateMonotonic(lists[0], listNumberOfTasks))
+    listRateMonotonic = rateMonotonic(lists[0], listNumberOfTasks)
+    for element in listRateMonotonic:
+        print(element)
     
 
 
