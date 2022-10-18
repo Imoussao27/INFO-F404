@@ -175,7 +175,9 @@ def sortListToPrint(listToPrint, listWCETOfTasks):
     return listToPrint
 
 def display(listToPrint):
-    pass
+    for element in listToPrint:
+        taskJob = element[0] + element[3]
+        print([element[1], element[2]],taskJob)
 
 def main():
     lists = readFile("taskset1") # order priority 
@@ -185,7 +187,8 @@ def main():
     listNumberOfTasks = numberOfTasks(lists[0], listPeriodOfTasks)
     listRateMonotonic = rateMonotonic(lists[0], listNumberOfTasks)
     listToPrint = toPrint(listWCETOfTasks,listRateMonotonic)
-    display(listToPrint)
+    sortedListToPrint = sortListToPrint(listToPrint, listWCETOfTasks)
+    display(sortedListToPrint)
     
 
 
