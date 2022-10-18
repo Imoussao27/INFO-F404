@@ -16,7 +16,6 @@ def readFile(nameFile): # read file taskset
                 period.append(word)
     return WCET, period
 
-
 def leastCommonMultiple(number1, number2):
     if(number1 > number2): #Find the greater number 
         greaterNumber = number1
@@ -55,6 +54,16 @@ def periodOfTasks(lcm, period):
             listJob.append(calcul)
         listPeriodOfTasks.append(listJob)
     return listPeriodOfTasks
+
+def WCETOfTasks(lcm, WCET, period):
+    listWCETOfTasks = []
+    for element in period:
+        listJob = []
+        numberOfJob = round(lcm / element)
+        for i in range(1, numberOfJob+1):
+            listJob.append(WCET[period.index(element)])
+        listWCETOfTasks.append(listJob)
+    return listWCETOfTasks
 
 def numberOfTasks(WCET, liste):
     newListe = []
@@ -137,7 +146,7 @@ def toPrint(WCET, listeUniprocessor):
         else:
             stock = listeUniprocessor[index][1] - 1
             print(listeUniprocessor[index-1][0],time, count+time)
-            print("---------------", listeUniprocessor[index-1][1] ,"-----------------")
+            print("---------------", count, time,"-----------------")
             time = listeUniprocessor[index-1][1]
             count = 1
     print(listeUniprocessor[-1][0], stock, count + stock)
@@ -145,9 +154,11 @@ def main():
     lists = readFile("taskset1") # order priority 
     lcm = findLeastCommonMultiple(sorted(lists[1])) #Find the best lcm 
     listPeriodOfTasks = periodOfTasks(lcm, lists[1])
+    listWCETOfTasks = WCETOfTasks(lcm, lists[0], lists[1])
     listNumberOfTasks = numberOfTasks(lists[0], listPeriodOfTasks)
     listRateMonotonic = rateMonotonic(lists[0], listNumberOfTasks)
-    toPrint(lists[0],listRateMonotonic)
+    toPrint(listWCETOfTasks,listRateMonotonic)
+    print(listWCETOfTasks)
     
 
 
