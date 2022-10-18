@@ -13,7 +13,7 @@ def readFile(nameFile): # read file taskset
             word = int(word.strip('\n')) #convert string to int
             if(isWCET):
                 WCET.append(word)
-                isWCET = False; 
+                isWCET = False
             else:
                 period.append(word)
 
@@ -45,10 +45,6 @@ def findLeastCommonMultiple(period):
 def priority(period):
     pass
 
-
-def rateMonotonic():
-    pass
-
 def earliestDeadLineFirst():
     pass 
 
@@ -63,23 +59,90 @@ def periodOfTasks(lcm, period):
         listPeriodOfTasks.append(listJob)
     return listPeriodOfTasks
 
+def numberOfTasks(WCET, liste):
+    newListe = []
+    for i in range(len(liste)):
+        miniListe = []
+        for line in liste[i]:
+            for j in range(WCET[i]):
+                miniListe.append((line, 1))
+        newListe.append(miniListe)
+    return newListe
+
+def rateMonotonic(WCET, tasks):
+    listRateMonotonic = []
+    listOfTimes = [0, 0, 0]
+    countOfJob = [3, 2, 2]
+    tasksOnGoing = [[] for i in range(3)]
+
+    time = 0
+    if(time == 0):
+        for i in range(len(tasks)):
+            tasksOnGoing[i].append(time)
+            tasksOnGoing[i].append(tasks[i][0][0])
+            tasksOnGoing[i].append(tasks[i][0][1])
+            tasksOnGoing[i].append("T" + str(i+1))
+    
+
+    onGoing = []
+
+    while(len(tasksOnGoing) != 0):
+        for index in range(len(tasksOnGoing)):
+            if(tasksOnGoing[index][0] <= time):
+                onGoing.append(tasksOnGoing[index]) 
+
+        newTasksOnGoing = []
+        for element in tasksOnGoing:
+           if element not in onGoing:
+            newTasksOnGoing.append(element)
+        tasksOnGoing = newTasksOnGoing
+        print("newTasksOnGoing = ", tasksOnGoing)
+
+        if(len(onGoing) != 0):
+            onGoing.sort(key=lambda a: a[1])
+            job = onGoing[0][3]
+            index = int(job[1]) - 1
+            print("tasks == ", tasks)
+            print((int(onGoing[0][1]), int(onGoing[0][2])))
+            tasks[index].remove((int(onGoing[0][1]), int(onGoing[0][2])))
+            countOfJob[index] -= 1 
+            if(countOfJob[index] == 0):
+                listOfTimes[index] = int(onGoing[0][1])
+                countOfJob[index] = WCET[index]
+            print("tasks == ", tasks)
+            listRateMonotonic.append(job)
+            time += 1
+            del onGoing[0]
+            print(listRateMonotonic)
+        else:
+            break; 
+        
+        print(listOfTimes, " is the list of times")
+        print(addNewTask(listOfTimes, tasks))
+        #tasksOnGoing = addNewTask(listOfTimes, tasks)
+
+def addNewTask(listOfTimes, tasks):
+    tasksOnGoing = [[] for i in range(3)]
+    for i in range(len(tasks)):
+            tasksOnGoing[i].append(listOfTimes[i])
+            tasksOnGoing[i].append(tasks[i][0][0])
+            tasksOnGoing[i].append(tasks[i][0][1])
+            tasksOnGoing[i].append("T" + str(i+1))
+
+    return tasksOnGoing
 
 
 def main():
     lists = readFile("taskset1") # order priority 
-    print(lists)
     lcm = findLeastCommonMultiple(sorted(lists[1])) #Find the best lcm 
     listPeriodOfTasks = periodOfTasks(lcm, lists[1])
+    listNumberOfTasks = numberOfTasks(lists[0], listPeriodOfTasks)
+    print(rateMonotonic(lists[0], listNumberOfTasks))
+    
 
-    print(listPeriodOfTasks)
 
     example = [('T1', 20), ('T2', 5), ('T3', 10)]
     example.sort(key=lambda a: a[1])
-    print(example)
-
-    exo = [('T1', 20), ('T2', 5), ('T3', 10)]
-    exo.sort(key=lambda a: a[1])
-    print(exo)
 
 
 if __name__ == '__main__':
