@@ -139,17 +139,44 @@ def toPrint(WCET, listeUniprocessor):
     time = 0
     count = 1
     stock = 0
-    print(listeUniprocessor)
+    listToPrint = []
     for index in range(1, len(listeUniprocessor)):
         if(listeUniprocessor[index-1][0] == listeUniprocessor[index][0]):
             count += 1
         else:
             stock = listeUniprocessor[index][1] - 1
-            print(listeUniprocessor[index-1][0],time, count+time)
-            print("---------------", count, time,"-----------------")
+            listToPrint.append([listeUniprocessor[index-1][0],time, count+time])
+            #print(listeUniprocessor[index-1][0],time, count+time)
             time = listeUniprocessor[index-1][1]
             count = 1
-    print(listeUniprocessor[-1][0], stock, count + stock)
+    listToPrint.append([listeUniprocessor[-1][0], stock, count + stock])
+    return listToPrint
+
+def sortListToPrint(listToPrint, listWCETOfTasks):
+    for element in listToPrint:
+        calcul = element[2] - element[1]
+        index = int(element[0][1]) - 1
+        for i in range(len(listWCETOfTasks[index])):
+            if(listWCETOfTasks[index][i] != 0):
+                value = listWCETOfTasks[index][i]
+                newValue = value - calcul
+                if(newValue == 0):
+                    listWCETOfTasks[index][i] = 0
+                    element.append("J"+str(i+1))
+                    break
+                elif(newValue > 0):
+                    listWCETOfTasks[index][i] = newValue
+                    element.append("J" + str(i+1))
+                    break
+                else:
+                    element.append("J" + str(i + 1))
+                    listWCETOfTasks[index][i] = 0
+                    calcul = - newValue
+    return listToPrint
+
+def display(listToPrint):
+    pass
+
 def main():
     lists = readFile("taskset1") # order priority 
     lcm = findLeastCommonMultiple(sorted(lists[1])) #Find the best lcm 
@@ -157,8 +184,8 @@ def main():
     listWCETOfTasks = WCETOfTasks(lcm, lists[0], lists[1])
     listNumberOfTasks = numberOfTasks(lists[0], listPeriodOfTasks)
     listRateMonotonic = rateMonotonic(lists[0], listNumberOfTasks)
-    toPrint(listWCETOfTasks,listRateMonotonic)
-    print(listWCETOfTasks)
+    listToPrint = toPrint(listWCETOfTasks,listRateMonotonic)
+    display(listToPrint)
     
 
 
