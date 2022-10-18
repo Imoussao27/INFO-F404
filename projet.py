@@ -111,12 +111,16 @@ def rateMonotonic(WCET, tasks):
                 listOfTimes[index] = int(onGoing[0][1])
                 countOfJob[index] = WCET[index]
             #print("tasks == ", tasks)
-            listRateMonotonic.append(job)
+            listRateMonotonic.append((job, time+1))
             time += 1
             del onGoing[0]
             #print(listRateMonotonic)
         else:
-            break
+            if(tasksOnGoing == [[], [], []]):
+                break
+            else:
+                print("times is = ", time)
+                time +=1
         
         #print(listOfTimes, " is the list of times")
         print(listRateMonotonic)
