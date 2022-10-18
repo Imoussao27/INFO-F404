@@ -1,12 +1,10 @@
 def readFile(nameFile): # read file taskset 
     WCET = []
     period = []
-    tasks = []
 
     file = open(nameFile, "r") 
     tasks = file.readlines()
 
-    count = 1
     for line in tasks:
         isWCET = True 
         for word in line.split(" "): #split white-spaces
@@ -16,7 +14,6 @@ def readFile(nameFile): # read file taskset
                 isWCET = False
             else:
                 period.append(word)
-
     return WCET, period
 
 
@@ -75,8 +72,6 @@ def rateMonotonic(WCET, tasks):
     countOfJob = []
     for element in WCET:
         countOfJob.append(element)
-    print(countOfJob)
-    print(WCET, " is wcet")
     tasksOnGoing = [[] for i in range(len(tasks))]
 
     time = 0
@@ -86,7 +81,6 @@ def rateMonotonic(WCET, tasks):
             tasksOnGoing[i].append(tasks[i][0][0])
             tasksOnGoing[i].append(tasks[i][0][1])
             tasksOnGoing[i].append("T" + str(i+1))
-
 
     while(len(tasksOnGoing) != 0):
         onGoing = []
@@ -105,29 +99,20 @@ def rateMonotonic(WCET, tasks):
             onGoing.sort(key=lambda a: a[1])
             job = onGoing[0][3]
             index = int(job[1]) - 1
-            #print("tasks == ", tasks)
-            #print((int(onGoing[0][1]), int(onGoing[0][2])))
             tasks[index].remove((int(onGoing[0][1]), int(onGoing[0][2])))
             countOfJob[index] -= 1 
             if(countOfJob[index] == 0):
                 listOfTimes[index] = int(onGoing[0][1])
                 countOfJob[index] = WCET[index]
-            #print("tasks == ", tasks)
             listRateMonotonic.append((job, time+1))
             time += 1
             del onGoing[0]
-            #print(listRateMonotonic)
         else:
             brouillon = [[] for i in range(len(tasksOnGoing))]
             if(tasksOnGoing == brouillon):
                 break
             else:
                 time +=1
-        
-        #print(listOfTimes, " is the list of times")
-        #print(listRateMonotonic)
-        #print(addNewTask(listOfTimes, tasks))
-        #print("-----------------------------------------------------")
         tasksOnGoing = addNewTask(listOfTimes, tasks)
     return listRateMonotonic
 
@@ -139,18 +124,30 @@ def addNewTask(listOfTimes, tasks):
             tasksOnGoing[i].append(tasks[i][0][0])
             tasksOnGoing[i].append(tasks[i][0][1])
             tasksOnGoing[i].append("T" + str(i+1))
-
     return tasksOnGoing
 
-
+def toPrint(WCET, listeUniprocessor):
+    time = 0
+    count = 1
+    stock = 0
+    print(listeUniprocessor)
+    for index in range(1, len(listeUniprocessor)):
+        if(listeUniprocessor[index-1][0] == listeUniprocessor[index][0]):
+            count += 1
+        else:
+            stock = listeUniprocessor[index][1] - 1
+            print(listeUniprocessor[index-1][0],time, count+time)
+            print("---------------", listeUniprocessor[index-1][1] ,"-----------------")
+            time = listeUniprocessor[index-1][1]
+            count = 1
+    print(listeUniprocessor[-1][0], stock, count + stock)
 def main():
     lists = readFile("taskset1") # order priority 
     lcm = findLeastCommonMultiple(sorted(lists[1])) #Find the best lcm 
     listPeriodOfTasks = periodOfTasks(lcm, lists[1])
     listNumberOfTasks = numberOfTasks(lists[0], listPeriodOfTasks)
     listRateMonotonic = rateMonotonic(lists[0], listNumberOfTasks)
-    for element in listRateMonotonic:
-        print(element)
+    toPrint(lists[0],listRateMonotonic)
     
 
 
