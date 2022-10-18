@@ -189,12 +189,6 @@ def main():
     listToPrint = toPrint(listWCETOfTasks,listRateMonotonic)
     sortedListToPrint = sortListToPrint(listToPrint, listWCETOfTasks)
     display(sortedListToPrint)
-    
-
-
-    example = [('T1', 20), ('T2', 5), ('T3', 10)]
-    example.sort(key=lambda a: a[1])
-
 
 if __name__ == '__main__':
     main()
