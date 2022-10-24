@@ -220,6 +220,20 @@ def sortListToPrint(listToPrint, listWCETOfTasks):
                     calcul = - newValue
     return listToPrint
 
+def feasibilityInterval(WCET, period):
+    calcul = 0
+    for i in range(len(WCET)):
+        calcul += WCET[i] / period[i]
+    return calcul
+
+def feasibilityIntervalRM(feasibility):
+    #call the good function
+    if(feasibility <= 0.69):
+        pass
+    elif (feasibility <= 0.69 and feasibility <= 1):
+        pass
+    else:
+        pass
 
 def display(listToPrint):
     for element in listToPrint:
@@ -237,7 +251,8 @@ def main():
     listRateMonotonic = rateMonotonic(lists[0], listNumberOfTasks)
     listToPrint = toPrint(listRateMonotonic)
     sortedListToPrint = sortListToPrint(listToPrint, listWCETOfTasks)
-    display(sortedListToPrint)
+    #display(sortedListToPrint)
+    print(feasibilityInterval(lists[0], lists[1]))
 
 
 if __name__ == '__main__':
