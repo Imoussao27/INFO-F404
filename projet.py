@@ -118,15 +118,8 @@ def rateMonotonic(WCET, tasks):
     listRateMonotonic = []
     listOfTimes = [0 for i in range(len(tasks))]
     countOfJob = copyList(WCET)
-    tasksOnGoing = [[] for i in range(len(tasks))]
-
     time = 0
-    if(time == 0):
-        for i in range(len(tasks)):
-            tasksOnGoing[i].append(time)
-            tasksOnGoing[i].append(tasks[i][0][0])
-            tasksOnGoing[i].append(tasks[i][0][1])
-            tasksOnGoing[i].append("T" + str(i+1))
+    tasksOnGoing = addNewTask(listOfTimes, tasks)
 
     while(len(tasksOnGoing) != 0):
         onGoing = []
