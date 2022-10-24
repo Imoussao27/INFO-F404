@@ -97,6 +97,17 @@ def numberOfTasks(WCET, liste):
         newListe.append(miniListe)
     return newListe
 
+def copyList(list):
+    """
+    Copy a list
+    :param list: a list of element
+    :return: list copy
+    """
+    copylist = []
+    for element in list:
+        copylist.append(element)
+    return copylist
+
 def rateMonotonic(WCET, tasks):
     """
     Function apply algo of rate monotonic
@@ -106,9 +117,7 @@ def rateMonotonic(WCET, tasks):
     """
     listRateMonotonic = []
     listOfTimes = [0 for i in range(len(tasks))]
-    countOfJob = []
-    for element in WCET:
-        countOfJob.append(element)
+    countOfJob = copyList(WCET)
     tasksOnGoing = [[] for i in range(len(tasks))]
 
     time = 0
