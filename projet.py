@@ -82,6 +82,12 @@ def periodOfTasks(lcm, WCET, period):
     return listPeriodOfTasks, listWCETOfTasks
 
 def numberOfTasks(WCET, liste):
+    """
+    create a list of list with the number WCET for the period
+    :param WCET: list of WCET
+    :param liste: a list with job deadline
+    :return: a list of list with the number WCET for the period
+    """
     newListe = []
     for i in range(len(liste)):
         miniListe = []
@@ -92,6 +98,12 @@ def numberOfTasks(WCET, liste):
     return newListe
 
 def rateMonotonic(WCET, tasks):
+    """
+    Function apply algo of rate monotonic
+    :param WCET: list of number of WCET
+    :param tasks: list of task and his jobs
+    :return: list with task, job and their time
+    """
     listRateMonotonic = []
     listOfTimes = [0 for i in range(len(tasks))]
     countOfJob = []
