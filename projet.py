@@ -155,8 +155,8 @@ def rateMonotonic(WCET, tasks):
             time += 1
             del onGoing[0]
         else:
-            brouillon = [[] for i in range(len(tasksOnGoing))]
-            if (tasksOnGoing == brouillon):
+            tasksOnGoingEmpty = [[] for i in range(len(tasksOnGoing))]
+            if (tasksOnGoing == tasksOnGoingEmpty):
                 break
             else:
                 time += 1
@@ -165,6 +165,12 @@ def rateMonotonic(WCET, tasks):
 
 
 def addNewTask(listOfTimes, tasks):
+    """
+    Add task in list
+    :param listOfTimes: list of deadline of job
+    :param tasks: list of task
+    :return: a list of task ongoing
+    """
     tasksOnGoing = [[] for i in range(len(tasks))]
     for i in range(len(tasks)):
         if (tasks[i] != []):
@@ -175,7 +181,7 @@ def addNewTask(listOfTimes, tasks):
     return tasksOnGoing
 
 
-def toPrint(WCET, listeUniprocessor):
+def toPrint(listeUniprocessor):
     time = 0
     count = 1
     stock = 0
@@ -186,7 +192,6 @@ def toPrint(WCET, listeUniprocessor):
         else:
             stock = listeUniprocessor[index][1] - 1
             listToPrint.append([listeUniprocessor[index - 1][0], time, count + time])
-            # print(listeUniprocessor[index-1][0],time, count+time)
             time = listeUniprocessor[index - 1][1]
             count = 1
     listToPrint.append([listeUniprocessor[-1][0], stock, count + stock])
@@ -230,7 +235,7 @@ def main():
     listWCETOfTasks = listsTasks[1]
     listNumberOfTasks = numberOfTasks(lists[0], listPeriodOfTasks)
     listRateMonotonic = rateMonotonic(lists[0], listNumberOfTasks)
-    listToPrint = toPrint(listWCETOfTasks, listRateMonotonic)
+    listToPrint = toPrint(listRateMonotonic)
     sortedListToPrint = sortListToPrint(listToPrint, listWCETOfTasks)
     display(sortedListToPrint)
 
