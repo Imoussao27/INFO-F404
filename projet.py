@@ -235,11 +235,16 @@ def feasibilityIntervalRM(feasibility):
     else:
         pass
 
+def feasibilityIntervalEDF(feasibility):
+    if feasibility <= 1:
+        return True
+    else:
+        return False #not schedu
+
 def display(listToPrint):
     for element in listToPrint:
         taskJob = element[0] + element[3]
         print([element[1], element[2]], taskJob)
-
 
 def main():
     lists = readFile("taskset1")  # order priority
