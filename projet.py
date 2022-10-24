@@ -1,4 +1,9 @@
 def readFile(nameFile): # read file taskset 
+    """
+    Read a file and return his contents in two lists
+    :param nameFile: string name of file
+    :return: two lists of numbers
+    """
     WCET = []
     period = []
 
@@ -17,7 +22,13 @@ def readFile(nameFile): # read file taskset
     return WCET, period
 
 def leastCommonMultiple(number1, number2):
-    if(number1 > number2): #Find the greater number 
+    """
+    Apply the least common multiple on two number
+    :param number1: integer represent a period
+    :param number2: integer represent a period
+    :return: number of least common multiple
+    """
+    if(number1 > number2): #Find the greater number
         greaterNumber = number1
     else:
         greaterNumber = number2
@@ -31,6 +42,11 @@ def leastCommonMultiple(number1, number2):
     return lcm
 
 def findLeastCommonMultiple(period):
+    """
+    Find the greater least common multiple
+    :param period: list of number of period
+    :return: integer of the greater common multiple
+    """
     lcm = leastCommonMultiple(period[0], period[1])
     for i in range(1, len(period)-1):
         find_lcm = leastCommonMultiple(period[i], period[i+1])
@@ -44,26 +60,26 @@ def priority(period):
 def earliestDeadLineFirst():
     pass 
 
-def periodOfTasks(lcm, period):
+def periodOfTasks(lcm, WCET, period):
+    """
+
+    :param lcm: number of lcm
+    :param period: list of number of period
+    :return:
+    """
     listPeriodOfTasks = []
+    listWCETOfTasks = []
     for element in period:
         listJob = []
+        listJobWCET = []
         numberOfJob = round(lcm / element)
         for i in range(1, numberOfJob+1):
             calcul = element * i
             listJob.append(calcul)
+            listJobWCET.append(WCET[period.index(element)])
         listPeriodOfTasks.append(listJob)
-    return listPeriodOfTasks
-
-def WCETOfTasks(lcm, WCET, period):
-    listWCETOfTasks = []
-    for element in period:
-        listJob = []
-        numberOfJob = round(lcm / element)
-        for i in range(1, numberOfJob+1):
-            listJob.append(WCET[period.index(element)])
-        listWCETOfTasks.append(listJob)
-    return listWCETOfTasks
+        listWCETOfTasks.append(listJobWCET)
+    return listPeriodOfTasks, listWCETOfTasks
 
 def numberOfTasks(WCET, liste):
     newListe = []
@@ -181,9 +197,10 @@ def display(listToPrint):
 
 def main():
     lists = readFile("taskset1") # order priority 
-    lcm = findLeastCommonMultiple(sorted(lists[1])) #Find the best lcm 
-    listPeriodOfTasks = periodOfTasks(lcm, lists[1])
-    listWCETOfTasks = WCETOfTasks(lcm, lists[0], lists[1])
+    lcm = findLeastCommonMultiple(sorted(lists[1])) #Find the best lcm
+    listsTasks = periodOfTasks(lcm,lists[0] ,lists[1])
+    listPeriodOfTasks = listsTasks[0]
+    listWCETOfTasks = listsTasks[1]
     listNumberOfTasks = numberOfTasks(lists[0], listPeriodOfTasks)
     listRateMonotonic = rateMonotonic(lists[0], listNumberOfTasks)
     listToPrint = toPrint(listWCETOfTasks,listRateMonotonic)
