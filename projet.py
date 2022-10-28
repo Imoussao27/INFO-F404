@@ -116,7 +116,7 @@ def copyList(list):
     return copylist
 
 
-def rateMonotonic(WCET, tasks):
+def rateMonotonic(lcm, WCET, tasks, order):
     """
     Function apply algo of rate monotonic
     :param WCET: list of number of WCET
@@ -127,14 +127,17 @@ def rateMonotonic(WCET, tasks):
     listOfTimes = [0 for i in range(len(tasks))]
     countOfJob = copyList(WCET)
     time = 0
-    tasksOnGoing = addNewTask(listOfTimes, tasks)  # list of list with period and name of task
+    tasksOnGoing = addNewTask(listOfTimes, tasks, order)  # list of list with period and name of task
 
-    while (len(tasksOnGoing) != 0):  # while there's not task
+    while (len(tasksOnGoing) != 0) and (lcm >= time):  # while there's not task
         onGoing = []
         for index in range(len(tasksOnGoing)):
             if (tasksOnGoing[index] != []):
                 if (tasksOnGoing[index][0] <= time):
                     onGoing.append(tasksOnGoing[index])
+                if(tasksOnGoing[index][1] < time): #TODO: condition pour verif le missing
+                    print("MISSSING")
+                    exit(1)
 
         newTasksOnGoing = []
         for element in tasksOnGoing:
@@ -143,7 +146,7 @@ def rateMonotonic(WCET, tasks):
         tasksOnGoing = newTasksOnGoing
 
         if (len(onGoing) != 0):
-            onGoing.sort(key=lambda a: a[1]) #sort task onGoing
+            onGoing.sort(key=lambda a: a[4]) #sort task onGoing #TODO: arranger cette ligne pour les priorités
             job = onGoing[0][3]
             index = int(job[1]) - 1
             tasks[index].remove((int(onGoing[0][1]), int(onGoing[0][2])))
@@ -160,11 +163,11 @@ def rateMonotonic(WCET, tasks):
                 break
             else:
                 time += 1
-        tasksOnGoing = addNewTask(listOfTimes, tasks)
+        tasksOnGoing = addNewTask(listOfTimes, tasks, order)
     return listRateMonotonic
 
 
-def addNewTask(listOfTimes, tasks):
+def addNewTask(listOfTimes, tasks, order):
     """
     Add task in list
     :param listOfTimes: list of deadline of job
@@ -177,11 +180,14 @@ def addNewTask(listOfTimes, tasks):
             tasksOnGoing[i].append(listOfTimes[i])
             tasksOnGoing[i].append(tasks[i][0][0])
             tasksOnGoing[i].append(tasks[i][0][1])
-            tasksOnGoing[i].append("T" + str(i + 1))
+            name = "T" + str(i + 1)
+            tasksOnGoing[i].append(name)
+            tasksOnGoing[i].append(order.index(name))
     return tasksOnGoing
 
 
 def toPrint(listeUniprocessor):
+    #TODO: revoir le print du temps parce que c'est chelou
     time = 0
     count = 1
     stock = 0
@@ -246,18 +252,43 @@ def display(listToPrint):
         taskJob = element[0] + element[3]
         print([element[1], element[2]], taskJob)
 
+def priorityTask(lists):
+    for i in range(len(lists)):
+        name = "T"
+        lists[i].append(name+str(i+1))
+
+def orderPriority(period):
+    orderPeriod = sorted(copyList(period))
+    orderTask = []
+    nameTask = []
+    for i in range(len(period)):
+        for j in range(len(orderPeriod)):
+            if orderPeriod[i] == period[j]:
+                name = "T"+str(j+1)
+                if j not in nameTask:
+                    orderTask.append(name)
+                    nameTask.append(j)
+                    break
+    return orderTask
+
+
+
+
+
+
+
 def main():
     lists = readFile("taskset1")  # order priority
+    listOrderPriority = orderPriority(lists[1])
     lcm = findLeastCommonMultiple(sorted(lists[1]))  # Find the best lcm
     listsTasks = periodOfTasks(lcm, lists[0], lists[1])
     listPeriodOfTasks = listsTasks[0]
     listWCETOfTasks = listsTasks[1]
     listNumberOfTasks = numberOfTasks(lists[0], listPeriodOfTasks)
-    listRateMonotonic = rateMonotonic(lists[0], listNumberOfTasks)
+    listRateMonotonic = rateMonotonic(lcm, lists[0], listNumberOfTasks, listOrderPriority)
     listToPrint = toPrint(listRateMonotonic)
     sortedListToPrint = sortListToPrint(listToPrint, listWCETOfTasks)
-    #display(sortedListToPrint)
-    print(feasibilityInterval(lists[0], lists[1]))
+    display(sortedListToPrint)
 
 
 if __name__ == '__main__':
