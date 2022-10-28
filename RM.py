@@ -4,6 +4,15 @@ class rate_monotonic:
         self.listRateMonotonic = []
         self.tool = tools()
 
+    def feasibilityIntervalRM(self, feasibility):
+        # call the good function
+        if (feasibility <= 0.69):
+            pass
+        elif (feasibility <= 0.69 and feasibility <= 1):
+            pass
+        else:
+            pass
+
     def addNewTask(self, listOfTimes, tasks, order):
         """
         Add task in list

@@ -98,7 +98,6 @@ def numberOfTasks(WCET, liste):
 
 
 def toPrint(listeUniprocessor):
-    #TODO: revoir le print du temps parce que c'est chelou
     time = 0
     count = 1
     stock = 0
@@ -109,7 +108,7 @@ def toPrint(listeUniprocessor):
         else:
             stock = listeUniprocessor[index][1] - 1
             listToPrint.append([listeUniprocessor[index - 1][0], time, count + time])
-            time = listeUniprocessor[index - 1][1]
+            time = listeUniprocessor[index + 1][1] - 2
             count = 1
     listToPrint.append([listeUniprocessor[-1][0], stock, count + stock])
     return listToPrint
@@ -136,27 +135,6 @@ def sortListToPrint(listToPrint, listWCETOfTasks):
                     listWCETOfTasks[index][i] = 0
                     calcul = - newValue
     return listToPrint
-
-def feasibilityInterval(WCET, period):
-    calcul = 0
-    for i in range(len(WCET)):
-        calcul += WCET[i] / period[i]
-    return calcul
-
-def feasibilityIntervalRM(feasibility):
-    #call the good function
-    if(feasibility <= 0.69):
-        pass
-    elif (feasibility <= 0.69 and feasibility <= 1):
-        pass
-    else:
-        pass
-
-def feasibilityIntervalEDF(feasibility):
-    if feasibility <= 1:
-        return True
-    else:
-        return False #not schedu
 
 def display(listToPrint):
     for element in listToPrint:
@@ -197,6 +175,7 @@ def main():
     listRateMonotonic = rm.algorithm(lcm, lists[0], listNumberOfTasks, listOrderPriority)
     listToPrint = toPrint(listRateMonotonic)
     sortedListToPrint = sortListToPrint(listToPrint, listWCETOfTasks)
+    print("------------------------")
     display(sortedListToPrint)
 
 
