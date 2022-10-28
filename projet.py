@@ -1,4 +1,5 @@
 from RM import *
+from tools import *
 def readFile(nameFile):  # read file taskset
     """
     Read a file and return his contents in two lists
@@ -167,19 +168,9 @@ def priorityTask(lists):
         name = "T"
         lists[i].append(name+str(i+1))
 
-def copyList(list):
-    """
-    Copy a list
-    :param list: a list of element
-    :return: list copy
-    """
-    copylist = []
-    for element in list:
-        copylist.append(element)
-    return copylist
-
 def orderPriority(period):
-    orderPeriod = sorted(copyList(period))
+    tool = tools()
+    orderPeriod = sorted(tool.copyList(period))
     orderTask = []
     nameTask = []
     for i in range(len(period)):

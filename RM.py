@@ -2,7 +2,7 @@ from tools import *
 class rate_monotonic:
     def __init__(self):
         self.listRateMonotonic = []
-        self.tools = tools()
+        self.tool = tools()
 
     def addNewTask(self, listOfTimes, tasks, order):
         """
@@ -24,7 +24,7 @@ class rate_monotonic:
 
     def algorithm(self, lcm, WCET, tasks, order):
         listOfTimes = [0 for i in range(len(tasks))]
-        countOfJob = self.tools.copyList(WCET)
+        countOfJob = self.tool.copyList(WCET)
         time = 0
         tasksOnGoing = self.addNewTask(listOfTimes, tasks, order)  # list of list with period and name of task
 
