@@ -59,7 +59,6 @@ def findLeastCommonMultiple(period):
 
 def periodOfTasks(lcm, WCET, period):
     """
-
     :param lcm: number of lcm
     :param period: list of number of period
     :return:
