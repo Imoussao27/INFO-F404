@@ -97,7 +97,7 @@ def numberOfTasks(WCET, liste):
 
 
 
-def toPrint(listeUniprocessor):
+def tasksWithTimes(listeUniprocessor):
     time = 0
     count = 1
     stock = 0
@@ -114,7 +114,7 @@ def toPrint(listeUniprocessor):
     return listToPrint
 
 
-def sortListToPrint(listToPrint, listWCETOfTasks):
+def addJobOnTask(listToPrint, listWCETOfTasks):
     for element in listToPrint:
         calcul = element[2] - element[1]
         index = int(element[0][1]) - 1
@@ -173,9 +173,8 @@ def main():
     listNumberOfTasks = numberOfTasks(lists[0], listPeriodOfTasks)
     rm = rate_monotonic()
     listRateMonotonic = rm.algorithm(lcm, lists[0], listNumberOfTasks, listOrderPriority)
-    listToPrint = toPrint(listRateMonotonic)
-    sortedListToPrint = sortListToPrint(listToPrint, listWCETOfTasks)
-    print("------------------------")
+    listToPrint = tasksWithTimes(listRateMonotonic)
+    sortedListToPrint = addJobOnTask(listToPrint, listWCETOfTasks)
     display(sortedListToPrint)
 
 
