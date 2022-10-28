@@ -95,8 +95,6 @@ def numberOfTasks(WCET, liste):
         newListe.append(miniListe)
     return newListe
 
-
-
 def tasksWithTimes(listeUniprocessor):
     time = 0
     count = 1
@@ -162,20 +160,21 @@ def orderPriority(period):
     return orderTask
 
 
+def runAlgorithm(algorithm, WCET, period, lcm, listsTasks):
+    listOrderPriority = orderPriority(period)
+    listNumberOfTasks = numberOfTasks(WCET, listsTasks[0])
+    listRateMonotonic = algorithm.algorithm(lcm, WCET, listNumberOfTasks, listOrderPriority)
+    listToPrint = tasksWithTimes(listRateMonotonic)
+    sortedListToPrint = addJobOnTask(listToPrint, listsTasks[1])
+    display(sortedListToPrint)
+
 
 def main():
     lists = readFile("taskset1")  # order priority
-    listOrderPriority = orderPriority(lists[1])
     lcm = findLeastCommonMultiple(sorted(lists[1]))  # Find the best lcm
     listsTasks = periodOfTasks(lcm, lists[0], lists[1])
-    listPeriodOfTasks = listsTasks[0]
-    listWCETOfTasks = listsTasks[1]
-    listNumberOfTasks = numberOfTasks(lists[0], listPeriodOfTasks)
-    rm = rate_monotonic()
-    listRateMonotonic = rm.algorithm(lcm, lists[0], listNumberOfTasks, listOrderPriority)
-    listToPrint = tasksWithTimes(listRateMonotonic)
-    sortedListToPrint = addJobOnTask(listToPrint, listWCETOfTasks)
-    display(sortedListToPrint)
+    runAlgorithm(rate_monotonic(), lists[0], lists[1], lcm, listsTasks)
+
 
 
 if __name__ == '__main__':
