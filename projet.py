@@ -1,6 +1,6 @@
 from RM import *
 from tools import *
-from math import *
+from EDF import *
 
 def readFile(nameFile):  # read file taskset
     """
@@ -172,13 +172,14 @@ def runAlgorithm(algorithm, WCET, period, lcm, listsTasks):
 
 
 def main():
-    isRate = True
+    isRate = False
     lists = readFile("taskset1")  # order priority
+    lcm = findLeastCommonMultiple(sorted(lists[1]))  # Find the best lcm
+    listsTasks = periodOfTasks(lcm, lists[0], lists[1])
     if(isRate):
-        lcm = findLeastCommonMultiple(sorted(lists[1]))  # Find the best lcm
-        listsTasks = periodOfTasks(lcm, lists[0], lists[1])
         runAlgorithm(rate_monotonic(lists[0], lists[1]), lists[0], lists[1], lcm, listsTasks)
-
+    else:
+        runAlgorithm(earliest_deadline_first(lists[0], lists[1]),lists[0], lists[1], lcm, listsTasks)
 
 
 if __name__ == '__main__':

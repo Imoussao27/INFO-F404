@@ -1,12 +1,37 @@
+from tools import *
 class earliest_deadline_first:
-    def __init__(self):
-        pass
-
+    def __init__(self, WCET, period):
+        self.listRateMonotonic = []
+        self.tool = tools()
+        self.WCET = WCET
+        self.period = period
     def feasibilityIntervalEDF(self, feasibility):
         if feasibility <= 1:
             return True
         else:
             return False  # not schedu
+
+    def run(self, lcm, tasks, order):
+        return self.algorithm(lcm, tasks, order)
+
+    def addNewTask(self, listOfTimes, tasks, order):
+        """
+        Add task in list
+        :param listOfTimes: list of deadline of job
+        :param tasks: list of task
+        :return: a list of task ongoing
+        """
+        tasksOnGoing = [[] for i in range(len(tasks))]
+        for i in range(len(tasks)):
+            if (tasks[i] != []):
+                tasksOnGoing[i].append(listOfTimes[i])
+                tasksOnGoing[i].append(tasks[i][0][0])
+                tasksOnGoing[i].append(tasks[i][0][1])
+                name = "T" + str(i + 1)
+                tasksOnGoing[i].append(name)
+                tasksOnGoing[i].append(order.index(name))
+        return tasksOnGoing
+
     def algorithm(self, lcm, tasks, order):
         listOfTimes = [0 for i in range(len(tasks))]
         countOfJob = self.tool.copyList(self.WCET)
@@ -30,7 +55,7 @@ class earliest_deadline_first:
             tasksOnGoing = newTasksOnGoing
 
             if (len(onGoing) != 0):
-                onGoing.sort(key=lambda a: a[4])  # sort task by priority onGoing
+                onGoing.sort(key=lambda a: a[1])  # sort task by priority onGoing
                 job = onGoing[0][3]
                 index = int(job[1]) - 1
                 tasks[index].remove((int(onGoing[0][1]), int(onGoing[0][2])))
