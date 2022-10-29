@@ -7,14 +7,22 @@ class rate_monotonic:
         self.WCET = WCET
         self.period = period
 
+    def run(self, lcm, tasks, order):
+        feasibility = self.tool.feasibilityInterval(self.WCET, self.period)
+        isFeasibility = self.feasibilityIntervalRM(feasibility)
+        if not isFeasibility:
+            print("MISSING TASK")
+            exit(1)
+        return self.algorithm(lcm, tasks, order)
+
     def feasibilityIntervalRM(self, feasibility):
         # call the good function
         if (feasibility <= 0.69):
-            pass
+            return True
         elif (feasibility <= 0.69 and feasibility <= 1):
-            self.feasibility(self.WCET, self.period)
+            return self.feasibility(self.WCET, self.period)
         else:
-            pass
+            return False
 
     def feasibility(self, WCET, period):
         """
@@ -74,10 +82,8 @@ class rate_monotonic:
                     if (tasksOnGoing[index][0] <= time):
                         onGoing.append(tasksOnGoing[index])
 
-                    if (tasksOnGoing[index][1] <= time):  # TODO: condition pour verif le missing
-                        print("MISSSING")
+                    if (tasksOnGoing[index][1] <= time):
                         return self.listRateMonotonic
-                        exit(1)
 
             newTasksOnGoing = []
             for element in tasksOnGoing:

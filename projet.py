@@ -165,7 +165,7 @@ def orderPriority(period):
 def runAlgorithm(algorithm, WCET, period, lcm, listsTasks):
     listOrderPriority = orderPriority(period)
     listNumberOfTasks = numberOfTasks(WCET, listsTasks[0])
-    listRateMonotonic = algorithm.algorithm(lcm, listNumberOfTasks, listOrderPriority)
+    listRateMonotonic = algorithm.run(lcm, listNumberOfTasks, listOrderPriority)
     listToPrint = tasksWithTimes(listRateMonotonic)
     sortedListToPrint = addJobOnTask(listToPrint, listsTasks[1])
     display(sortedListToPrint)
