@@ -165,45 +165,21 @@ def orderPriority(period):
 def runAlgorithm(algorithm, WCET, period, lcm, listsTasks):
     listOrderPriority = orderPriority(period)
     listNumberOfTasks = numberOfTasks(WCET, listsTasks[0])
-    listRateMonotonic = algorithm.algorithm(lcm, WCET, listNumberOfTasks, listOrderPriority)
+    listRateMonotonic = algorithm.algorithm(lcm, listNumberOfTasks, listOrderPriority)
     listToPrint = tasksWithTimes(listRateMonotonic)
     sortedListToPrint = addJobOnTask(listToPrint, listsTasks[1])
     display(sortedListToPrint)
 
 
 def main():
+    isRate = True
     lists = readFile("taskset1")  # order priority
-    lcm = findLeastCommonMultiple(sorted(lists[1]))  # Find the best lcm
-    listsTasks = periodOfTasks(lcm, lists[0], lists[1])
-    runAlgorithm(rate_monotonic(), lists[0], lists[1], lcm, listsTasks)
+    if(isRate):
+        lcm = findLeastCommonMultiple(sorted(lists[1]))  # Find the best lcm
+        listsTasks = periodOfTasks(lcm, lists[0], lists[1])
+        runAlgorithm(rate_monotonic(lists[0], lists[1]), lists[0], lists[1], lcm, listsTasks)
 
 
-def feasi(WCET, period):
-    """
-    Function handle the feasibility for rate monotonic
-    with this formula : Ci + Sum(wk / Ti) * Cj
-    :param WCET: list of element of WCET
-    :param period: list of element of period
-    :return: True if the system is feasibility
-    """
-    oldSomme = 0
-    isFeasibility = False
-    for i in range(len(WCET)):
-        isFeasibility = False
-        w2 = WCET[i] #Ci
-        beforeWT = WCET[i] #wk
-        for j in range(len(WCET)):
-            somme = 0 #wk+1
-            for k in range(i):
-                wt = ceil(beforeWT / period[k]) * WCET[k]
-                somme += wt #Sum(wk/Tj) * Cj
-            somme += w2 #(Sum(wk/Tj) * Cj) + Ci
-            beforeWT = somme
-            if(oldSomme == somme): #verify if the system is feasible
-                isFeasibility = True
-                break
-            oldSomme = somme
-    return isFeasibility
+
 if __name__ == '__main__':
-    f = feasi([10, 20, 10, 50], [50,80,100,200])
-    print(f)
+    main()

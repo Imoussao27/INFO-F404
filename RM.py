@@ -1,17 +1,47 @@
 from tools import *
+from math import *
 class rate_monotonic:
-    def __init__(self):
+    def __init__(self, WCET, period):
         self.listRateMonotonic = []
         self.tool = tools()
+        self.WCET = WCET
+        self.period = period
 
     def feasibilityIntervalRM(self, feasibility):
         # call the good function
         if (feasibility <= 0.69):
             pass
         elif (feasibility <= 0.69 and feasibility <= 1):
-            pass
+            self.feasibility(self.WCET, self.period)
         else:
             pass
+
+    def feasibility(self, WCET, period):
+        """
+        Function handle the feasibility for rate monotonic
+        with this formula : Ci + Sum(wk / Ti) * Cj
+        :param WCET: list of element of WCET
+        :param period: list of element of period
+        :return: True if the system is feasibility
+        """
+        oldSomme = 0
+        isFeasibility = False
+        for i in range(len(WCET)):
+            isFeasibility = False
+            w2 = WCET[i]  # Ci
+            beforeWT = WCET[i]  # wk
+            for j in range(len(WCET)):
+                somme = 0  # wk+1
+                for k in range(i):
+                    wt = ceil(beforeWT / period[k]) * WCET[k]
+                    somme += wt  # Sum(wk/Tj) * Cj
+                somme += w2  # (Sum(wk/Tj) * Cj) + Ci
+                beforeWT = somme
+                if (oldSomme == somme):  # verify if the system is feasible
+                    isFeasibility = True
+                    break
+                oldSomme = somme
+        return isFeasibility
 
     def addNewTask(self, listOfTimes, tasks, order):
         """
@@ -31,9 +61,9 @@ class rate_monotonic:
                 tasksOnGoing[i].append(order.index(name))
         return tasksOnGoing
 
-    def algorithm(self, lcm, WCET, tasks, order):
+    def algorithm(self, lcm, tasks, order):
         listOfTimes = [0 for i in range(len(tasks))]
-        countOfJob = self.tool.copyList(WCET)
+        countOfJob = self.tool.copyList(self.WCET)
         time = 0
         tasksOnGoing = self.addNewTask(listOfTimes, tasks, order)  # list of list with period and name of task
 
@@ -61,7 +91,7 @@ class rate_monotonic:
                 countOfJob[index] -= 1
                 if countOfJob[index] == 0:
                     listOfTimes[index] = int(onGoing[0][1])
-                    countOfJob[index] = WCET[index]
+                    countOfJob[index] = self.WCET[index]
                 self.listRateMonotonic.append((job, time + 1))
                 time += 1
                 del onGoing[0]
