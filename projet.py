@@ -108,7 +108,7 @@ def tasksWithTimes(listeUniprocessor):
         else:
             stock = listeUniprocessor[index][1] - 1
             listToPrint.append([listeUniprocessor[index - 1][0], time, count + time])
-            time = listeUniprocessor[index + 1][1] - 2
+            time = listeUniprocessor[index][1] - 1
             count = 1
     listToPrint.append([listeUniprocessor[-1][0], stock, count + stock])
     return listToPrint

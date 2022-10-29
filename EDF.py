@@ -7,3 +7,45 @@ class earliest_deadline_first:
             return True
         else:
             return False  # not schedu
+    def algorithm(self, lcm, tasks, order):
+        listOfTimes = [0 for i in range(len(tasks))]
+        countOfJob = self.tool.copyList(self.WCET)
+        time = 0
+        tasksOnGoing = self.addNewTask(listOfTimes, tasks, order)  # list of list with period and name of task
+
+        while (len(tasksOnGoing) != 0) and (lcm >= time):  # while there's not task
+            onGoing = []
+            for index in range(len(tasksOnGoing)):
+                if (tasksOnGoing[index] != []):
+                    if (tasksOnGoing[index][0] <= time):
+                        onGoing.append(tasksOnGoing[index])
+
+                    if (tasksOnGoing[index][1] <= time):
+                        return self.listRateMonotonic
+
+            newTasksOnGoing = []
+            for element in tasksOnGoing:
+                if element not in onGoing:
+                    newTasksOnGoing.append(element)
+            tasksOnGoing = newTasksOnGoing
+
+            if (len(onGoing) != 0):
+                onGoing.sort(key=lambda a: a[4])  # sort task by priority onGoing
+                job = onGoing[0][3]
+                index = int(job[1]) - 1
+                tasks[index].remove((int(onGoing[0][1]), int(onGoing[0][2])))
+                countOfJob[index] -= 1
+                if countOfJob[index] == 0:
+                    listOfTimes[index] = int(onGoing[0][1])
+                    countOfJob[index] = self.WCET[index]
+                self.listRateMonotonic.append((job, time + 1))
+                time += 1
+                del onGoing[0]
+            else:
+                tasksOnGoingEmpty = [[] for i in range(len(tasksOnGoing))]
+                if (tasksOnGoing == tasksOnGoingEmpty):
+                    break
+                else:
+                    time += 1
+            tasksOnGoing = self.addNewTask(listOfTimes, tasks, order)
+        return self.listRateMonotonic

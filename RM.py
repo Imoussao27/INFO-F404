@@ -10,16 +10,16 @@ class rate_monotonic:
     def run(self, lcm, tasks, order):
         feasibility = self.tool.feasibilityInterval(self.WCET, self.period)
         isFeasibility = self.feasibilityIntervalRM(feasibility)
-        if not isFeasibility:
-            print("MISSING TASK")
-            exit(1)
+        #print(isFeasibility)
+        #if not isFeasibility:
+        #    print("MISSING TASK")
+        #    exit(1)
         return self.algorithm(lcm, tasks, order)
 
     def feasibilityIntervalRM(self, feasibility):
-        # call the good function
         if (feasibility <= 0.69):
             return True
-        elif (feasibility <= 0.69 and feasibility <= 1):
+        elif (feasibility >= 0.69 and feasibility <= 1):
             return self.feasibility(self.WCET, self.period)
         else:
             return False
@@ -40,7 +40,7 @@ class rate_monotonic:
             beforeWT = WCET[i]  # wk
             for j in range(len(WCET)):
                 somme = 0  # wk+1
-                for k in range(i):
+                for k in range(i): #TODO: FAUX
                     wt = ceil(beforeWT / period[k]) * WCET[k]
                     somme += wt  # Sum(wk/Tj) * Cj
                 somme += w2  # (Sum(wk/Tj) * Cj) + Ci
@@ -92,7 +92,7 @@ class rate_monotonic:
             tasksOnGoing = newTasksOnGoing
 
             if (len(onGoing) != 0):
-                onGoing.sort(key=lambda a: a[4])  # sort task onGoing #TODO: arranger cette ligne pour les priorités
+                onGoing.sort(key=lambda a: a[4])  # sort task by priority onGoing
                 job = onGoing[0][3]
                 index = int(job[1]) - 1
                 tasks[index].remove((int(onGoing[0][1]), int(onGoing[0][2])))
