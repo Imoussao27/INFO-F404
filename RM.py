@@ -73,8 +73,10 @@ class rate_monotonic:
                 if (tasksOnGoing[index] != []):
                     if (tasksOnGoing[index][0] <= time):
                         onGoing.append(tasksOnGoing[index])
-                    if (tasksOnGoing[index][1] < time):  # TODO: condition pour verif le missing
+
+                    if (tasksOnGoing[index][1] <= time):  # TODO: condition pour verif le missing
                         print("MISSSING")
+                        return self.listRateMonotonic
                         exit(1)
 
             newTasksOnGoing = []
