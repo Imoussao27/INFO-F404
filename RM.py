@@ -10,9 +10,8 @@ class rate_monotonic:
     def run(self, lcm, tasks, order):
         feasibility = self.tool.feasibilityInterval(self.WCET, self.period)
         isFeasibility = self.feasibilityIntervalRM(feasibility)
-        #print(isFeasibility)
-        #if not isFeasibility:
-        #    print("MISSING TASK")
+        if not isFeasibility:
+            print("MISSING TASK")
         #    exit(1)
         return self.algorithm(lcm, tasks, order)
 
@@ -38,17 +37,20 @@ class rate_monotonic:
             isFeasibility = False
             w2 = WCET[i]  # Ci
             beforeWT = WCET[i]  # wk
-            for j in range(len(WCET)):
-                somme = 0  # wk+1
-                for k in range(i): #TODO: FAUX
-                    wt = ceil(beforeWT / period[k]) * WCET[k]
-                    somme += wt  # Sum(wk/Tj) * Cj
-                somme += w2  # (Sum(wk/Tj) * Cj) + Ci
-                beforeWT = somme
-                if (oldSomme == somme):  # verify if the system is feasible
-                    isFeasibility = True
-                    break
-                oldSomme = somme
+            while not isFeasibility and oldSomme <= max(self.period):
+                for j in range(len(WCET)):
+                    somme = 0  # wk+1
+                    for k in range(i):
+                        wt = ceil(beforeWT / period[k]) * WCET[k]
+                        somme += wt  # Sum(wk/Tj) * Cj
+                    somme += w2  # (Sum(wk/Tj) * Cj) + Ci
+                    beforeWT = somme
+                    if (oldSomme == somme):  # verify if the system is feasible
+                        isFeasibility = True
+                        break
+                    oldSomme = somme
+            if(oldSomme > max(self.period)):
+                return False
         return isFeasibility
 
     def addNewTask(self, listOfTimes, tasks, order):
