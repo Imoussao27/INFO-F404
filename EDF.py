@@ -15,6 +15,7 @@ class earliest_deadline_first:
         #    exit(1)
         else:
             lcm = self.feasibility(self.WCET, self.period)
+        print("Feasibility interval is [ 0,", lcm,"]")
         return self.algorithm(lcm, tasks, order)
 
     def feasibility(self, WCET, period):
