@@ -1,18 +1,48 @@
 from tools import *
+from math import *
 class earliest_deadline_first:
     def __init__(self, WCET, period):
         self.listRateMonotonic = []
         self.tool = tools()
         self.WCET = WCET
         self.period = period
+
+    def run(self, lcm, tasks, order):
+        feasibility = self.tool.feasibilityInterval(self.WCET, self.period)
+        isFeasibility = self.feasibilityIntervalEDF(feasibility)
+        if not isFeasibility:
+            print("MISSING TASK")
+        #    exit(1)
+        else:
+            lcm = self.feasibility(self.WCET, self.period)
+        return self.algorithm(lcm, tasks, order)
+
+    def feasibility(self, WCET, period):
+        """
+        Function handle the feasibility for earliest deadline first
+        with this formula : Ci + Sum(wk / Ti) * Cj
+        :param WCET: list of element of WCET
+        :param period: list of element of period
+        :return: feasibility interval for EDF
+        """
+        l = sum(WCET)
+        isFeasibility = False
+        while not isFeasibility:
+            lk = 0
+            for i in range(len(period)):
+                lk += ceil(l/period[i]) * WCET[i]
+            if lk == l:
+                isFeasibility = True
+            l = lk
+        return lk
+
+
+
     def feasibilityIntervalEDF(self, feasibility):
         if feasibility <= 1:
             return True
         else:
-            return False  # not schedu
-
-    def run(self, lcm, tasks, order):
-        return self.algorithm(lcm, tasks, order)
+            return False  # not schedule
 
     def addNewTask(self, listOfTimes, tasks, order):
         """

@@ -172,7 +172,7 @@ def runAlgorithm(algorithm, WCET, period, lcm, listsTasks):
 
 
 def main():
-    isRate = True
+    isRate = False
     lists = readFile("taskset1")  # order priority
     lcm = findLeastCommonMultiple(sorted(lists[1]))  # Find the best lcm
     listsTasks = periodOfTasks(lcm, lists[0], lists[1])
