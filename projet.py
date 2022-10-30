@@ -1,5 +1,4 @@
 from RM import *
-from tools import *
 from EDF import *
 
 def readFile(nameFile):  # read file taskset
