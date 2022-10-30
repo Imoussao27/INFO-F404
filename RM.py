@@ -16,7 +16,7 @@ class rate_monotonic:
         print("Feasibility interval is [ 0,", lcm,"]")
         return self.algorithm(lcm, tasks, order)
 
-    def feasibilityIntervalRM(self, feasibility):
+    def feasibilityIntervalRM(self, feasibility): #TODO: verify ce que aissa a dit, also pour edf
         if (feasibility <= 0.69):
             return True
         elif (feasibility >= 0.69 and feasibility <= 1):
@@ -52,7 +52,6 @@ class rate_monotonic:
                     oldSomme = somme
             if(oldSomme > max(self.period)):
                 return False
-        print(oldSomme)
         return isFeasibility
 
     def addNewTask(self, listOfTimes, tasks, order):
