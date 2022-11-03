@@ -172,7 +172,7 @@ def runAlgorithm(algorithm, WCET, period, lcm, listsTasks):
 
 def main():
     nameFile = "taskset1" # sys.argv[2]
-    nameAlgo = "rm"  #sys.argv[1].lower()
+    nameAlgo = "edf"  #sys.argv[1].lower()
     if nameAlgo == "rm" or nameAlgo == "edf":
         print("Running with " + nameAlgo.upper())
         lists = readFile(nameFile)  # order priority
@@ -187,6 +187,7 @@ def main():
 
         if algo.isSchedule:
             print("The system is schedulable!")
+            algo.visualizationTool(lcm)
         else:
             print("The system is not schedulable!")
             exit(1)
