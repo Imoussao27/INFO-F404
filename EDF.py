@@ -6,12 +6,16 @@ class earliest_deadline_first:
         self.tool = tools()
         self.WCET = WCET
         self.period = period
+        self.isSchedule = True
+
 
     def run(self, lcm, tasks, order):
         feasibility = self.tool.feasibilityInterval(self.WCET, self.period)
         isFeasibility = self.feasibilityIntervalEDF(feasibility)
         if not isFeasibility:
             print("MISSING TASK")
+            self.isSchedule = False
+
         #    exit(1)
         else:
             lcm = self.feasibility(self.WCET, self.period)
@@ -105,3 +109,6 @@ class earliest_deadline_first:
                     time += 1
             tasksOnGoing = self.addNewTask(listOfTimes, tasks, order)
         return self.listRateMonotonic
+
+    def getSchedule(self):
+        return self.isSchedule

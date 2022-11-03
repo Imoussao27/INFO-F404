@@ -1,6 +1,8 @@
 import sys
 from RM import *
 from EDF import *
+from test import *
+from test2 import*
 
 def readFile(nameFile):  # read file taskset
     """
@@ -180,10 +182,10 @@ def main():
         lcm = findLeastCommonMultiple(sorted(lists[1]))  # Find the best lcm
         listsTasks = periodOfTasks(lcm, lists[0], lists[1])
         if nameAlgo == "rm":
-            algo = rate_monotonic(lists[0], lists[1])
+            algo = test(lists[0], lists[1]) #rate_monotonic(lists[0], lists[1])
             runAlgorithm(algo, lists[0], lists[1], lcm, listsTasks)
         else:
-            algo = earliest_deadline_first(lists[0], lists[1])
+            algo = test2(lists[0], lists[1]) #earliest_deadline_first(lists[0], lists[1])
             runAlgorithm(algo, lists[0], lists[1], lcm, listsTasks)
 
         if algo.isSchedule:
