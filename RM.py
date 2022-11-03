@@ -6,13 +6,13 @@ class rate_monotonic:
         self.tool = tools()
         self.WCET = WCET
         self.period = period
+        self.isSchedule = True
 
     def run(self, lcm, tasks, order):
         feasibility = self.tool.feasibilityInterval(self.WCET, self.period)
         isFeasibility = self.feasibilityIntervalRM(feasibility)
         if not isFeasibility:
-            print("MISSING TASK")
-        #    exit(1)
+            self.isSchedule = False
         print("Feasibility interval is [ 0,", lcm,"]")
         return self.algorithm(lcm, tasks, order)
 
@@ -21,8 +21,8 @@ class rate_monotonic:
             return True
         elif (feasibility >= 0.69 and feasibility <= 1):
             return self.feasibility(self.WCET, self.period)
-        else:
-            return False
+        #else:
+        #    return False
 
     def feasibility(self, WCET, period):
         """
@@ -114,3 +114,6 @@ class rate_monotonic:
                     time += 1
             tasksOnGoing = self.addNewTask(listOfTimes, tasks, order)
         return self.listRateMonotonic
+
+    def getSchedule(self):
+        return self.isSchedule

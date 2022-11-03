@@ -172,17 +172,25 @@ def runAlgorithm(algorithm, WCET, period, lcm, listsTasks):
 
 
 def main():
-    nameFile = sys.argv[2] #"taskset1"
-    nameAlgo = sys.argv[1]
+    nameFile = "taskset1" # sys.argv[2]
+    nameAlgo = "rm"  #sys.argv[1].lower()
     if nameAlgo == "rm" or nameAlgo == "edf":
         print("Running with " + nameAlgo.upper())
         lists = readFile(nameFile)  # order priority
         lcm = findLeastCommonMultiple(sorted(lists[1]))  # Find the best lcm
         listsTasks = periodOfTasks(lcm, lists[0], lists[1])
         if nameAlgo == "rm":
-            runAlgorithm(rate_monotonic(lists[0], lists[1]), lists[0], lists[1], lcm, listsTasks)
+            algo = rate_monotonic(lists[0], lists[1])
+            runAlgorithm(algo, lists[0], lists[1], lcm, listsTasks)
         else:
-            runAlgorithm(earliest_deadline_first(lists[0], lists[1]), lists[0], lists[1], lcm, listsTasks)
+            algo = earliest_deadline_first(lists[0], lists[1])
+            runAlgorithm(algo, lists[0], lists[1], lcm, listsTasks)
+
+        if algo.isSchedule:
+            print("The system is schedulable!")
+        else:
+            print("The system is not schedulable!")
+            exit(1)
     else:
         print("rm OR edf !!")
 
