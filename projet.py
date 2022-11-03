@@ -1,8 +1,5 @@
-import sys
-from RM import *
-from EDF import *
-from test import *
-from test2 import*
+from rm import *
+from edf import*
 
 def readFile(nameFile):  # read file taskset
     """
@@ -175,17 +172,17 @@ def runAlgorithm(algorithm, WCET, period, lcm, listsTasks):
 
 def main():
     nameFile = "taskset1" # sys.argv[2]
-    nameAlgo = "rm"  #sys.argv[1].lower()
+    nameAlgo = "edf"  #sys.argv[1].lower()
     if nameAlgo == "rm" or nameAlgo == "edf":
         print("Running with " + nameAlgo.upper())
         lists = readFile(nameFile)  # order priority
         lcm = findLeastCommonMultiple(sorted(lists[1]))  # Find the best lcm
         listsTasks = periodOfTasks(lcm, lists[0], lists[1])
         if nameAlgo == "rm":
-            algo = test(lists[0], lists[1]) #rate_monotonic(lists[0], lists[1])
+            algo = rate_monotonic(lists[0], lists[1]) #rate_monotonic(lists[0], lists[1])
             runAlgorithm(algo, lists[0], lists[1], lcm, listsTasks)
         else:
-            algo = test2(lists[0], lists[1]) #earliest_deadline_first(lists[0], lists[1])
+            algo = earliest_deadline_first(lists[0], lists[1]) #earliest_deadline_first(lists[0], lists[1])
             runAlgorithm(algo, lists[0], lists[1], lcm, listsTasks)
 
         if algo.isSchedule:
