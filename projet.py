@@ -136,9 +136,13 @@ def addJobOnTask(listToPrint, listWCETOfTasks):
     return listToPrint
 
 def display(listToPrint):
+    listToVisual = [[] for i in range(2)]
     for element in listToPrint:
         taskJob = element[0] + element[3]
+        index = int(element[0][1]) - 1
+        listToVisual[index].append((element[1], element[2] - element[1]))
         print([element[1], element[2]], taskJob)
+    return listToVisual
 
 def priorityTask(lists):
     for i in range(len(lists)):
@@ -167,7 +171,8 @@ def runAlgorithm(algorithm, WCET, period, lcm, listsTasks):
     listRateMonotonic = algorithm.run(lcm, listNumberOfTasks, listOrderPriority)
     listToPrint = tasksWithTimes(listRateMonotonic)
     sortedListToPrint = addJobOnTask(listToPrint, listsTasks[1])
-    display(sortedListToPrint)
+    listAllTasks = display(sortedListToPrint)
+    algorithm.visualizationTool(lcm, listAllTasks)
 
 
 def main():
@@ -187,7 +192,6 @@ def main():
 
         if algo.isSchedule:
             print("The system is schedulable!")
-            algo.visualizationTool(lcm)
         else:
             print("The system is not schedulable!")
             exit(1)
