@@ -2,6 +2,8 @@ from algorithm import *
 
 class earliest_deadline_first(algorithm):
     def __init__(self, WCET, period):
+        self.numberOfTask = self.size = len(WCET)
+        self.lcm = 0
         super().__init__(WCET, period)
 
     def run(self, lcm, tasks, order, numberOrder=1):
@@ -9,7 +11,7 @@ class earliest_deadline_first(algorithm):
         isFeasibility = self.feasibilityIntervalEDF(feasibility)
         super().setIsFeasibility(isFeasibility)
         if isFeasibility:
-            lcm = self.feasibility(self.WCET, self.period)
+            self.lcm = lcm = self.feasibility(self.WCET, self.period)
         return super().run(lcm, tasks, order, numberOrder)
 
     def feasibility(self, WCET, period):
@@ -36,3 +38,7 @@ class earliest_deadline_first(algorithm):
             return True
         else:
             return False  # not schedule
+
+    #TODO: met direct dans algo
+    def visualization(self, lcm, listAllTasks, name):
+        super().visualizationTool(self.lcm, listAllTasks, self.size, self.numberOfTask, name)

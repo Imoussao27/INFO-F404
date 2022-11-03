@@ -136,7 +136,7 @@ def addJobOnTask(listToPrint, listWCETOfTasks):
     return listToPrint
 
 def display(listToPrint):
-    listToVisual = [[] for i in range(2)]
+    listToVisual = [[] for i in range(4)] #TODO: changer ça
     for element in listToPrint:
         taskJob = element[0] + element[3]
         index = int(element[0][1]) - 1
@@ -171,13 +171,12 @@ def runAlgorithm(algorithm, WCET, period, lcm, listsTasks):
     listRateMonotonic = algorithm.run(lcm, listNumberOfTasks, listOrderPriority)
     listToPrint = tasksWithTimes(listRateMonotonic)
     sortedListToPrint = addJobOnTask(listToPrint, listsTasks[1])
-    listAllTasks = display(sortedListToPrint)
-    algorithm.visualizationTool(lcm, listAllTasks)
+    return display(sortedListToPrint)
 
 
 def main():
     nameFile = "taskset1" # sys.argv[2]
-    nameAlgo = "edf"  #sys.argv[1].lower()
+    nameAlgo = "rm"  #sys.argv[1].lower()
     if nameAlgo == "rm" or nameAlgo == "edf":
         print("Running with " + nameAlgo.upper())
         lists = readFile(nameFile)  # order priority
@@ -185,11 +184,11 @@ def main():
         listsTasks = periodOfTasks(lcm, lists[0], lists[1])
         if nameAlgo == "rm":
             algo = rate_monotonic(lists[0], lists[1]) #rate_monotonic(lists[0], lists[1])
-            runAlgorithm(algo, lists[0], lists[1], lcm, listsTasks)
+            listAllTasks = runAlgorithm(algo, lists[0], lists[1], lcm, listsTasks)
         else:
             algo = earliest_deadline_first(lists[0], lists[1]) #earliest_deadline_first(lists[0], lists[1])
-            runAlgorithm(algo, lists[0], lists[1], lcm, listsTasks)
-
+            listAllTasks = runAlgorithm(algo, lists[0], lists[1], lcm, listsTasks)
+        algo.visualization(lcm, listAllTasks, nameFile)
         if algo.isSchedule:
             print("The system is schedulable!")
         else:

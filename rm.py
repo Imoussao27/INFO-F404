@@ -2,6 +2,7 @@ from algorithm import *
 
 class rate_monotonic(algorithm):
     def __init__(self, WCET, period):
+        self.numberOfTask = self.size = len(WCET)
         super().__init__(WCET, period)
 
 
@@ -51,3 +52,5 @@ class rate_monotonic(algorithm):
         return isFeasibility
 
 
+    def visualization(self, lcm, listAllTasks, name):
+        super().visualizationTool(lcm, listAllTasks, self.size, self.numberOfTask, name)

@@ -83,25 +83,33 @@ class algorithm:
     def getSchedule(self):
         return self.isSchedule
 
-    def visualizationTool(self, lcm, listAllTasks, numberOfTask=2):
-
+    def visualizationTool(self, lcm, listAllTasks, size,numberOfTask, name):
+        # Setting
         fig, gnt = plt.subplots()
         gnt.set_xlabel('Time')
         gnt.grid(True)
 
         gnt.set_ylim(0, numberOfTask*10)
         gnt.set_xlim(0, lcm)
-        # Setting ticks on y-axis
-        gnt.set_yticks([10, 20])
-        gnt.set_yticklabels(['Task 1', 'Task 2'])
 
+        # Setting ticks
+        listSetyTicklabels, listSetyTicks = self.settingTicks(size)
 
+        gnt.set_yticks(listSetyTicks)
+        gnt.set_yticklabels(listSetyTicklabels)
 
         # Declaring a bar in schedule
         count = 0
-        print(listAllTasks)
         for element in listAllTasks:
             gnt.broken_barh(element, (count, 10), facecolors=('tab:blue'))
             count += 10
 
-        plt.savefig("gantt1.png") #TODO: change name
+        plt.savefig(name + ".png")
+
+    def settingTicks(self, size):
+        listSetyTicks = []
+        listSetyTicklabels = []
+        for i in range(size):
+            listSetyTicks.append((i + 1) * 10)
+            listSetyTicklabels.append('Task' + str(i + 1))
+        return listSetyTicklabels, listSetyTicks
