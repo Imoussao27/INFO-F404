@@ -2,10 +2,6 @@ from algorithm import *
 
 class rate_monotonic(algorithm):
     def __init__(self, WCET, period):
-        self.listRateMonotonic = []
-        self.tool = tools()
-        self.WCET = WCET
-        self.period = period
         super().__init__(WCET, period)
 
 

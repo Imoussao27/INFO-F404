@@ -172,7 +172,7 @@ def runAlgorithm(algorithm, WCET, period, lcm, listsTasks):
 
 def main():
     nameFile = "taskset1" # sys.argv[2]
-    nameAlgo = "edf"  #sys.argv[1].lower()
+    nameAlgo = "rm"  #sys.argv[1].lower()
     if nameAlgo == "rm" or nameAlgo == "edf":
         print("Running with " + nameAlgo.upper())
         lists = readFile(nameFile)  # order priority
