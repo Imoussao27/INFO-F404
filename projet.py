@@ -145,11 +145,21 @@ def display(listToPrint):
     return listToVisual
 
 def priorityTask(lists):
+    """
+    Add name of tasks
+    :param lists: list of priority task
+    :return: list of priority task with their name
+    """
     for i in range(len(lists)):
         name = "T"
         lists[i].append(name+str(i+1))
 
 def orderPriority(period):
+    """
+    Function to handle the priority of task to RM
+    :param period: list of period
+    :return: list with the task priority
+    """
     tool = tools()
     orderPeriod = sorted(tool.copyList(period))
     orderTask = []
