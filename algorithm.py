@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from tools import *
-from math import *
+
 class algorithm:
     def __init__(self, WCET, period):
         self.listRateMonotonic = []
@@ -38,8 +38,16 @@ class algorithm:
         return tasksOnGoing
 
     def algorithm(self, lcm, tasks, order, numberOrder):
+        """
+        Algorithm to schedule the tasks
+        :param lcm: least common multiple
+        :param tasks: list of task
+        :param order: priority of job
+        :param numberOrder: number to order list
+        :return: list with tasks scheduled
+        """
         listOfTimes = [0 for i in range(len(tasks))]
-        countOfJob = self.tool.copyList(self.WCET)
+        countOfJob = self.tool.copyList(self.WCET) #copy of WCET
         time = 0
         tasksOnGoing = self.addNewTask(listOfTimes, tasks, order)  # list of list with period and name of task
 
@@ -50,7 +58,7 @@ class algorithm:
                     if (tasksOnGoing[index][0] <= time):
                         onGoing.append(tasksOnGoing[index])
 
-                    if (tasksOnGoing[index][1] <= time):
+                    if (tasksOnGoing[index][1] <= time): #verify if there is missing task
                         return self.listRateMonotonic
 
             newTasksOnGoing = []
@@ -73,17 +81,25 @@ class algorithm:
                 del onGoing[0]
             else:
                 tasksOnGoingEmpty = [[] for i in range(len(tasksOnGoing))]
-                if (tasksOnGoing == tasksOnGoingEmpty):
+                if (tasksOnGoing == tasksOnGoingEmpty): #verify if there is task yet
                     break
                 else:
                     time += 1
-            tasksOnGoing = self.addNewTask(listOfTimes, tasks, order)
+            tasksOnGoing = self.addNewTask(listOfTimes, tasks, order) #add the next tasks
         return self.listRateMonotonic
 
     def getSchedule(self):
         return self.isSchedule
 
     def visualizationTool(self, lcm, listAllTasks, size,numberOfTask, name):
+        """
+         Function to create a graphical to visual the representation of the execution
+        :param lcm: least common multiple
+        :param listAllTasks: list of all task with job
+        :param numberOfTask: number of tasks
+        :param name: name of file
+        :return: None
+        """
         # Setting
         fig, gnt = plt.subplots()
         gnt.set_xlabel('Time')
@@ -107,6 +123,11 @@ class algorithm:
         plt.savefig(name + ".png")
 
     def settingTicks(self, size):
+        """
+        Function to handle setting ticks
+        :param size: number of tasks
+        :return: set of ticks and name of tasks
+        """
         listSetyTicks = []
         listSetyTicklabels = []
         for i in range(size):

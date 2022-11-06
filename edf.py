@@ -1,4 +1,5 @@
 from algorithm import *
+from math import *
 
 class earliest_deadline_first(algorithm):
     def __init__(self, WCET, period):
@@ -7,6 +8,14 @@ class earliest_deadline_first(algorithm):
         super().__init__(WCET, period)
 
     def run(self, lcm, tasks, order, numberOrder=1):
+        """
+        :param lcm: least common multiple
+        :param tasks: list of tasks
+        :param order: priority of job
+        :param numberOrder: number to order list
+        :return: a list of task ongoing
+        """
+        self.lcm = lcm
         feasibility = super().getFeasibility()
         isFeasibility = self.feasibilityIntervalEDF(feasibility)
         super().setIsFeasibility(isFeasibility)

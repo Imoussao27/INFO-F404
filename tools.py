@@ -1,6 +1,4 @@
 class tools:
-    def __init__(self):
-        pass
     def copyList(self, list):
         """
         Copy a list
@@ -13,6 +11,12 @@ class tools:
         return copylist
 
     def feasibilityInterval(self, WCET, period):
+        """
+        Function to calcul feasibility interval
+        :param WCET: list of WCET
+        :param period: list of period
+        :return: feasibility interval
+        """
         calcul = 0
         for i in range(len(WCET)):
             calcul += WCET[i] / period[i]

@@ -1,4 +1,5 @@
 from algorithm import *
+from math import *
 
 class rate_monotonic(algorithm):
     def __init__(self, WCET, period):
@@ -7,19 +8,24 @@ class rate_monotonic(algorithm):
 
 
     def run(self, lcm, tasks, order, numberOrder=4):
+        """
+        :param lcm: least common multiple
+        :param tasks: list of tasks
+        :param order: priority of job
+        :param numberOrder: number to order list
+        :return: a list of task ongoing
+        """
         feasibility = super().getFeasibility()
         isFeasibility = self.feasibilityIntervalRM(feasibility)
         super().setIsFeasibility(isFeasibility)
         return super().run(lcm, tasks, order, numberOrder)
 
 
-    def feasibilityIntervalRM(self, feasibility):  # TODO: verify ce que aissa a dit, also pour edf
+    def feasibilityIntervalRM(self, feasibility):
         if (feasibility <= 0.69):
             return True
         elif (feasibility >= 0.69 and feasibility <= 1):
             return self.feasibility(self.WCET, self.period)
-        # else:
-        #    return False
 
     def feasibility(self, WCET, period):
         """

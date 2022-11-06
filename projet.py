@@ -166,6 +166,15 @@ def orderPriority(period):
 
 
 def runAlgorithm(algorithm, WCET, period, lcm, listsTasks):
+    """
+    Run algorithm RM or EDF
+    :param algorithm: name of algorithm
+    :param WCET: list of number of WCET
+    :param period: list of number of period
+    :param lcm: least Common Multiple
+    :param listsTasks: list of tasks
+    :return: list of jobs with task
+    """
     listOrderPriority = orderPriority(period)
     listNumberOfTasks = numberOfTasks(WCET, listsTasks[0])
     listRateMonotonic = algorithm.run(lcm, listNumberOfTasks, listOrderPriority)
@@ -176,7 +185,7 @@ def runAlgorithm(algorithm, WCET, period, lcm, listsTasks):
 
 def main():
     nameFile = "taskset1" # sys.argv[2]
-    nameAlgo = "rm"  #sys.argv[1].lower()
+    nameAlgo = "edf"  #sys.argv[1].lower()
     if nameAlgo == "rm" or nameAlgo == "edf":
         print("Running with " + nameAlgo.upper())
         lists = readFile(nameFile)  # order priority
@@ -196,6 +205,7 @@ def main():
             exit(1)
     else:
         print("rm OR edf !!")
+        exit(1)
 
 if __name__ == '__main__':
     main()
