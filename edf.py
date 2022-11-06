@@ -20,8 +20,8 @@ class earliest_deadline_first(algorithm):
         isFeasibility = self.feasibilityIntervalEDF(feasibility)
         super().setIsFeasibility(isFeasibility)
         if isFeasibility:
-            self.lcm = lcm = self.feasibility(self.WCET, self.period)
-        return super().run(lcm, tasks, order, numberOrder)
+            self.lcm = self.feasibility(self.WCET, self.period)
+        return super().run(self.lcm, tasks, order, numberOrder)
 
     def feasibility(self, WCET, period):
         """
