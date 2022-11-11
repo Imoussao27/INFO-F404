@@ -7,6 +7,7 @@ class algorithm:
         self.tool = tools()
         self.WCET = WCET
         self.period = period
+        self.deadlineMiss = None
         self.isSchedule = True
 
     def getFeasibility(self):
@@ -59,6 +60,7 @@ class algorithm:
                         onGoing.append(tasksOnGoing[index])
 
                     if (tasksOnGoing[index][1] <= time): #verify if there is missing task
+                        self.listRateMonotonic.append((tasksOnGoing[index][3], time+1))
                         return self.listRateMonotonic
 
             newTasksOnGoing = []
@@ -119,6 +121,12 @@ class algorithm:
         for element in listAllTasks:
             gnt.broken_barh(element, (count, 10), facecolors=('tab:blue'))
             count += 10
+
+        if self.deadlineMiss != None:
+            print(self.deadlineMiss[1], 'is ')
+            count = (int(self.deadlineMiss[1])-1) * 10
+            gnt.broken_barh([(6,1)], (count, 10), facecolors=('tab:red'))
+            plt.title("DEADLINE MISS : " + self.deadlineMiss, color="red")
 
         plt.savefig(name + ".png")
 

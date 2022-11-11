@@ -135,8 +135,11 @@ def addJobOnTask(listToPrint, listWCETOfTasks):
                     calcul = - newValue
     return listToPrint
 
-def display(listToPrint):
+def display(algo, listToPrint):
     listToVisual = [[] for i in range(4)] #TODO: changer ça
+    if not algo.isSchedule:
+        algo.deadlineMiss = listToPrint[-1][0] + listToPrint[-1][-1]
+        del listToPrint[-1]
     for element in listToPrint:
         taskJob = element[0] + element[3]
         index = int(element[0][1]) - 1
@@ -190,7 +193,7 @@ def runAlgorithm(algorithm, WCET, period, lcm, listsTasks):
     listRateMonotonic = algorithm.run(lcm, listNumberOfTasks, listOrderPriority)
     listToPrint = tasksWithTimes(listRateMonotonic)
     sortedListToPrint = addJobOnTask(listToPrint, listsTasks[1])
-    return display(sortedListToPrint)
+    return display(algorithm, sortedListToPrint)
 
 
 def main():
@@ -211,7 +214,7 @@ def main():
         if algo.isSchedule:
             print("The system is schedulable!")
         else:
-            print("The system is not schedulable!")
+            print("The system is not schedulable because deadline miss for", algo.deadlineMiss, "!")
             exit(1)
     else:
         print("rm OR edf !!")
