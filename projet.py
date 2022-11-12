@@ -162,11 +162,11 @@ def runAlgorithm(algorithm, WCET, period, listsTasks):
 
 def main():
     nameFile = "taskset1" # sys.argv[2]
-    nameAlgo = "edf"  #sys.argv[1].lower()
+    nameAlgo = "rm"  #sys.argv[1].lower()
     if nameAlgo == "rm" or nameAlgo == "edf":
         print("Running with " + nameAlgo.upper())
         lists = readFile(nameFile)  # order priority
-        maxTask = max(lists[1])
+        maxTask = tools().leastCommonMultiple(lists[1])
         if nameAlgo == "rm":
             algo = rate_monotonic(lists[0], lists[1]) #rate_monotonic(lists[0], lists[1])
         else:

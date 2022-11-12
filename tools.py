@@ -1,3 +1,5 @@
+from math import gcd
+
 class tools:
     def copyList(self, list):
         """
@@ -9,6 +11,17 @@ class tools:
         for element in list:
             copylist.append(element)
         return copylist
+
+    def leastCommonMultiple(self, period):
+        """
+        Function calculate least common multiple
+        :param period: list of period
+        :return: int LCM
+        """
+        lcm = 1
+        for elem in period:
+            lcm = lcm * elem // gcd(lcm, elem)
+        return lcm
 
     def feasibilityInterval(self, WCET, period):
         """
