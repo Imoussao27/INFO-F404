@@ -15,13 +15,11 @@ class earliest_deadline_first(algorithm):
         :param numberOrder: number to order list
         :return: a list of task ongoing
         """
-        self.lcm = lcm
         feasibility = super().getFeasibility()
         isFeasibility = self.feasibilityIntervalEDF(feasibility)
         super().setIsFeasibility(isFeasibility)
-        if isFeasibility:
-            self.lcm = self.feasibility(self.WCET, self.period)
-        return super().run(self.lcm, tasks, order, numberOrder)
+        self.feasi = self.feasibility(self.WCET, self.period)
+        return super().run(self.feasi, tasks, order, numberOrder)
 
     def feasibility(self, WCET, period):
         """

@@ -24,41 +24,6 @@ def readFile(nameFile):  # read file taskset
                 period.append(word)
     return WCET, period
 
-
-def leastCommonMultiple(number1, number2):
-    """
-    Apply the least common multiple on two number
-    :param number1: integer represent a period
-    :param number2: integer represent a period
-    :return: number of least common multiple
-    """
-    if (number1 > number2):  # Find the greater number
-        greaterNumber = number1
-    else:
-        greaterNumber = number2
-
-    isFindLCM = True
-    while (isFindLCM):  # calcul lcm
-        if ((greaterNumber % number1 == 0) and (greaterNumber % number2 == 0)):
-            lcm = greaterNumber
-            isFindLCM = False
-        greaterNumber += 1
-    return lcm
-
-
-def findLeastCommonMultiple(period):
-    """
-    Find the greater least common multiple
-    :param period: list of number of period
-    :return: integer of the greater common multiple
-    """
-    lcm = leastCommonMultiple(period[0], period[1])
-    for i in range(1, len(period) - 1):
-        find_lcm = leastCommonMultiple(period[i], period[i + 1])
-        if lcm <= find_lcm:
-            lcm = find_lcm
-    return lcm
-
 def periodOfTasks(lcm, WCET, period):
     """
     :param lcm: number of lcm
@@ -202,14 +167,13 @@ def main():
     if nameAlgo == "rm" or nameAlgo == "edf":
         print("Running with " + nameAlgo.upper())
         lists = readFile(nameFile)  # order priority
-        lcm = findLeastCommonMultiple(sorted(lists[1]))  # Find the best lcm
-        listsTasks = periodOfTasks(lcm, lists[0], lists[1])
+        maxTask = max(lists[1])
         if nameAlgo == "rm":
             algo = rate_monotonic(lists[0], lists[1]) #rate_monotonic(lists[0], lists[1])
-            listAllTasks = runAlgorithm(algo, lists[0], lists[1], lcm, listsTasks)
         else:
             algo = earliest_deadline_first(lists[0], lists[1]) #earliest_deadline_first(lists[0], lists[1])
-            listAllTasks = runAlgorithm(algo, lists[0], lists[1], lcm, listsTasks)
+        listsTasks = periodOfTasks(maxTask, lists[0], lists[1])
+        listAllTasks = runAlgorithm(algo, lists[0], lists[1], lcm, listsTasks)
         algo.visualization(lcm, listAllTasks, nameFile)
         if algo.isSchedule:
             print("The system is schedulable!")

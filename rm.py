@@ -51,12 +51,14 @@ class rate_monotonic(algorithm):
                     beforeWT = somme
                     if (oldSomme == somme):  # verify if the system is feasible
                         isFeasibility = True
+                        self.feasi = somme
                         break
                     oldSomme = somme
-            if (oldSomme > max(self.period)):
+            if (oldSomme > max(period)):
+                self.feasi = max(period)
                 return False
-        return isFeasibility
 
+        return isFeasibility
 
     def visualization(self, lcm, listAllTasks, name):
         super().visualizationTool(lcm, listAllTasks, self.size, self.numberOfTask, name)

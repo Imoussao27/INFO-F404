@@ -7,6 +7,7 @@ class algorithm:
         self.tool = tools()
         self.WCET = WCET
         self.period = period
+        self.feasi = 0
         self.deadlineMiss = None
         self.isSchedule = True
 
@@ -17,7 +18,7 @@ class algorithm:
         self.isSchedule = isFeasibility
 
     def run(self, lcm, tasks, order, numberOrder):
-        print("Feasibility interval is [ 0,", lcm,"]")
+        print("Feasibility interval is [ 0,", self.feasi,"]")
         return self.algorithm(lcm, tasks, order, numberOrder)
 
     def addNewTask(self, listOfTimes, tasks, order):
@@ -47,6 +48,7 @@ class algorithm:
         :param numberOrder: number to order list
         :return: list with tasks scheduled
         """
+        lcm = self.feasi
         listOfTimes = [0 for i in range(len(tasks))]
         countOfJob = self.tool.copyList(self.WCET) #copy of WCET
         time = 0
@@ -108,7 +110,7 @@ class algorithm:
         gnt.grid(True)
 
         gnt.set_ylim(0, numberOfTask*10)
-        gnt.set_xlim(0, lcm)
+        gnt.set_xlim(0, self.feasi)
 
         # Setting ticks
         listSetyTicklabels, listSetyTicks = self.settingTicks(size)
