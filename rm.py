@@ -25,7 +25,8 @@ class rate_monotonic(algorithm):
             return True
         elif (feasibility >= 0.69 and feasibility <= 1):
             return self.feasibility(self.WCET, self.period)
-
+        self.feasi = max(self.period)
+        return False
     def feasibility(self, WCET, period):
         """
         Function handle the feasibility for rate monotonic
@@ -34,6 +35,7 @@ class rate_monotonic(algorithm):
         :param period: list of element of period
         :return: True if the system is feasibility
         """
+        print("je suis rentree")
         oldSomme = 0
         isFeasibility = False
         for i in range(len(WCET)):

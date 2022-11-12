@@ -15,8 +15,9 @@ class earliest_deadline_first(algorithm):
         """
         feasibility = super().getFeasibility()
         isFeasibility = self.feasibilityIntervalEDF(feasibility)
+        if isFeasibility:
+            self.feasi = self.feasibility(self.WCET, self.period)
         super().setIsFeasibility(isFeasibility)
-        self.feasi = self.feasibility(self.WCET, self.period)
         return super().run(tasks, order, numberOrder)
 
     def feasibility(self, WCET, period):
@@ -27,7 +28,9 @@ class earliest_deadline_first(algorithm):
         :param period: list of element of period
         :return: feasibility interval for EDF
         """
+        print(period)
         l = sum(WCET)
+        print(l)
         isFeasibility = False
         while not isFeasibility:
             lk = 0

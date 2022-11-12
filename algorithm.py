@@ -7,7 +7,7 @@ class algorithm:
         self.tool = tools()
         self.WCET = WCET
         self.period = period
-        self.feasi = 0
+        self.feasi = max(period)
         self.deadlineMiss = None
         self.isSchedule = True
 
