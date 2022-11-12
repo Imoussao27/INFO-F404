@@ -4,12 +4,10 @@ from math import *
 class earliest_deadline_first(algorithm):
     def __init__(self, WCET, period):
         self.numberOfTask = self.size = len(WCET)
-        self.lcm = 0
         super().__init__(WCET, period)
 
-    def run(self, lcm, tasks, order, numberOrder=1):
+    def run(self, tasks, order, numberOrder=1):
         """
-        :param lcm: least common multiple
         :param tasks: list of tasks
         :param order: priority of job
         :param numberOrder: number to order list
@@ -19,7 +17,7 @@ class earliest_deadline_first(algorithm):
         isFeasibility = self.feasibilityIntervalEDF(feasibility)
         super().setIsFeasibility(isFeasibility)
         self.feasi = self.feasibility(self.WCET, self.period)
-        return super().run(self.feasi, tasks, order, numberOrder)
+        return super().run(tasks, order, numberOrder)
 
     def feasibility(self, WCET, period):
         """
@@ -47,5 +45,5 @@ class earliest_deadline_first(algorithm):
             return False  # not schedule
 
     #TODO: met direct dans algo
-    def visualization(self, lcm, listAllTasks, name):
-        super().visualizationTool(self.lcm, listAllTasks, self.size, self.numberOfTask, name)
+    def visualization(self, listAllTasks, name):
+        super().visualizationTool(listAllTasks, self.size, self.numberOfTask, name)

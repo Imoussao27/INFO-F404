@@ -17,9 +17,9 @@ class algorithm:
     def setIsFeasibility(self, isFeasibility):
         self.isSchedule = isFeasibility
 
-    def run(self, lcm, tasks, order, numberOrder):
+    def run(self, tasks, order, numberOrder):
         print("Feasibility interval is [ 0,", self.feasi,"]")
-        return self.algorithm(lcm, tasks, order, numberOrder)
+        return self.algorithm(tasks, order, numberOrder)
 
     def addNewTask(self, listOfTimes, tasks, order):
         """
@@ -39,22 +39,20 @@ class algorithm:
                 tasksOnGoing[i].append(order.index(name))
         return tasksOnGoing
 
-    def algorithm(self, lcm, tasks, order, numberOrder):
+    def algorithm(self, tasks, order, numberOrder):
         """
         Algorithm to schedule the tasks
-        :param lcm: least common multiple
         :param tasks: list of task
         :param order: priority of job
         :param numberOrder: number to order list
         :return: list with tasks scheduled
         """
-        lcm = self.feasi
         listOfTimes = [0 for i in range(len(tasks))]
         countOfJob = self.tool.copyList(self.WCET) #copy of WCET
         time = 0
         tasksOnGoing = self.addNewTask(listOfTimes, tasks, order)  # list of list with period and name of task
 
-        while (len(tasksOnGoing) != 0) and (lcm >= time):  # while there's not task
+        while (len(tasksOnGoing) != 0) and (self.feasi >= time):  # while there's not task
             onGoing = []
             for index in range(len(tasksOnGoing)):
                 if (tasksOnGoing[index] != []):
@@ -95,10 +93,9 @@ class algorithm:
     def getSchedule(self):
         return self.isSchedule
 
-    def visualizationTool(self, lcm, listAllTasks, size,numberOfTask, name):
+    def visualizationTool(self, listAllTasks, size, numberOfTask, name):
         """
          Function to create a graphical to visual the representation of the execution
-        :param lcm: least common multiple
         :param listAllTasks: list of all task with job
         :param numberOfTask: number of tasks
         :param name: name of file
@@ -125,9 +122,8 @@ class algorithm:
             count += 10
 
         if self.deadlineMiss != None:
-            print(self.deadlineMiss[1], 'is ')
             count = (int(self.deadlineMiss[1])-1) * 10
-            gnt.broken_barh([(6,1)], (count, 10), facecolors=('tab:red'))
+            #gnt.broken_barh([(6,1)], (count, 10), facecolors=('tab:red'))
             plt.title("DEADLINE MISS : " + self.deadlineMiss, color="red")
 
         plt.savefig(name + ".png")

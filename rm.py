@@ -7,9 +7,8 @@ class rate_monotonic(algorithm):
         super().__init__(WCET, period)
 
 
-    def run(self, lcm, tasks, order, numberOrder=4):
+    def run(self, tasks, order, numberOrder=4):
         """
-        :param lcm: least common multiple
         :param tasks: list of tasks
         :param order: priority of job
         :param numberOrder: number to order list
@@ -18,7 +17,7 @@ class rate_monotonic(algorithm):
         feasibility = super().getFeasibility()
         isFeasibility = self.feasibilityIntervalRM(feasibility)
         super().setIsFeasibility(isFeasibility)
-        return super().run(lcm, tasks, order, numberOrder)
+        return super().run(tasks, order, numberOrder)
 
 
     def feasibilityIntervalRM(self, feasibility):
@@ -60,5 +59,5 @@ class rate_monotonic(algorithm):
 
         return isFeasibility
 
-    def visualization(self, lcm, listAllTasks, name):
-        super().visualizationTool(lcm, listAllTasks, self.size, self.numberOfTask, name)
+    def visualization(self, listAllTasks, name):
+        super().visualizationTool(listAllTasks, self.size, self.numberOfTask, name)

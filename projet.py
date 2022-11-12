@@ -24,9 +24,9 @@ def readFile(nameFile):  # read file taskset
                 period.append(word)
     return WCET, period
 
-def periodOfTasks(lcm, WCET, period):
+def periodOfTasks(maxTask, WCET, period):
     """
-    :param lcm: number of lcm
+    :param maxTask: max deadline
     :param period: list of number of period
     :return:
     """
@@ -35,7 +35,7 @@ def periodOfTasks(lcm, WCET, period):
     for element in period:
         listJob = []
         listJobWCET = []
-        numberOfJob = round(lcm / element)
+        numberOfJob = round(maxTask / element)
         for i in range(1, numberOfJob + 1):
             calcul = element * i
             listJob.append(calcul)
@@ -143,19 +143,18 @@ def orderPriority(period):
     return orderTask
 
 
-def runAlgorithm(algorithm, WCET, period, lcm, listsTasks):
+def runAlgorithm(algorithm, WCET, period, listsTasks):
     """
     Run algorithm RM or EDF
     :param algorithm: name of algorithm
     :param WCET: list of number of WCET
     :param period: list of number of period
-    :param lcm: least Common Multiple
     :param listsTasks: list of tasks
     :return: list of jobs with task
     """
     listOrderPriority = orderPriority(period)
     listNumberOfTasks = numberOfTasks(WCET, listsTasks[0])
-    listRateMonotonic = algorithm.run(lcm, listNumberOfTasks, listOrderPriority)
+    listRateMonotonic = algorithm.run(listNumberOfTasks, listOrderPriority)
     listToPrint = tasksWithTimes(listRateMonotonic)
     sortedListToPrint = addJobOnTask(listToPrint, listsTasks[1])
     return display(algorithm, sortedListToPrint)
@@ -173,8 +172,8 @@ def main():
         else:
             algo = earliest_deadline_first(lists[0], lists[1]) #earliest_deadline_first(lists[0], lists[1])
         listsTasks = periodOfTasks(maxTask, lists[0], lists[1])
-        listAllTasks = runAlgorithm(algo, lists[0], lists[1], lcm, listsTasks)
-        algo.visualization(lcm, listAllTasks, nameFile)
+        listAllTasks = runAlgorithm(algo, lists[0], lists[1], listsTasks)
+        algo.visualization(listAllTasks, nameFile)
         if algo.isSchedule:
             print("The system is schedulable!")
         else:
