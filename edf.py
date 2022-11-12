@@ -44,6 +44,5 @@ class earliest_deadline_first(algorithm):
         else:
             return False  # not schedule
 
-    #TODO: met direct dans algo
     def visualization(self, listAllTasks, name):
         super().visualizationTool(listAllTasks, self.size, self.numberOfTask, name)

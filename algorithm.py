@@ -122,8 +122,6 @@ class algorithm:
             count += 10
 
         if self.deadlineMiss != None:
-            count = (int(self.deadlineMiss[1])-1) * 10
-            #gnt.broken_barh([(6,1)], (count, 10), facecolors=('tab:red'))
             plt.title("DEADLINE MISS : " + self.deadlineMiss, color="red")
 
         plt.savefig(name + ".png")
