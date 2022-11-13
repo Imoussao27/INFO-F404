@@ -1,5 +1,6 @@
 from rm import *
 from edf import*
+import sys
 
 def readFile(nameFile):  # read file taskset
     """
@@ -62,6 +63,11 @@ def numberOfTasks(WCET, liste):
     return newListe
 
 def tasksWithTimes(listeUniprocessor):
+    """
+    Create a list with the task and his time to be executed
+    :param listeUniprocessor: list with all tasks
+    :return: a list with the task and his time to be executed
+    """
     time = 0
     count = 1
     stock = 0
@@ -79,6 +85,12 @@ def tasksWithTimes(listeUniprocessor):
 
 
 def addJobOnTask(listToPrint, listWCETOfTasks):
+    """
+    Add the name of job for the task
+    :param listToPrint: list task with his time
+    :param listWCETOfTasks: list of WCET
+    :return: a list with task job and his time
+    """
     for element in listToPrint:
         calcul = element[2] - element[1]
         index = int(element[0][1]) - 1
@@ -101,7 +113,13 @@ def addJobOnTask(listToPrint, listWCETOfTasks):
     return listToPrint
 
 def display(algo, listToPrint):
-    listToVisual = [[] for i in range(4)] #TODO: changer ça
+    """
+    Print in the terminal the system
+    :param algo: rm or edf
+    :param listToPrint:  a list with task job and his time
+    :return: a list with time for each job of a task
+    """
+    listToVisual = [[] for i in range(len(listToPrint))]
     if not algo.isSchedule:
         algo.deadlineMiss = listToPrint[-1][0] + listToPrint[-1][-1]
         del listToPrint[-1]
@@ -161,8 +179,8 @@ def runAlgorithm(algorithm, WCET, period, listsTasks):
 
 
 def main():
-    nameFile = "taskset1" # sys.argv[2]
-    nameAlgo = "edf"  #sys.argv[1].lower()
+    nameFile = sys.argv[2]
+    nameAlgo = sys.argv[1].lower()
     if nameAlgo == "rm" or nameAlgo == "edf":
         print("Running with " + nameAlgo.upper())
         lists = readFile(nameFile)  # order priority
