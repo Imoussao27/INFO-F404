@@ -35,7 +35,6 @@ class rate_monotonic(algorithm):
         :param period: list of element of period
         :return: True if the system is feasibility
         """
-        print("je suis rentree")
         oldSomme = 0
         isFeasibility = False
         for i in range(len(WCET)):
@@ -61,5 +60,5 @@ class rate_monotonic(algorithm):
 
         return isFeasibility
 
-    def visualization(self, listAllTasks, name):
-        super().visualizationTool(listAllTasks, self.size, self.numberOfTask, name)
+    def visualization(self, listAllTasks, name, nameAlgo):
+        super().visualizationTool(listAllTasks, self.size, self.numberOfTask, name, nameAlgo)

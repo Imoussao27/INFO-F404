@@ -173,14 +173,15 @@ def main():
             algo = earliest_deadline_first(lists[0], lists[1]) #earliest_deadline_first(lists[0], lists[1])
         listsTasks = periodOfTasks(maxTask, lists[0], lists[1])
         listAllTasks = runAlgorithm(algo, lists[0], lists[1], listsTasks)
-        algo.visualization(listAllTasks, nameFile)
+        algo.visualization(listAllTasks, nameFile, nameAlgo)
         if algo.isSchedule:
             print("The system is schedulable!")
         else:
             print("The system is not schedulable because deadline miss for", algo.deadlineMiss, "!")
             exit(1)
     else:
-        print("rm OR edf !!")
+        print("You have to write rm OR edf.")
+        print("Don't to write the name of the file.")
         exit(1)
 
 if __name__ == '__main__':

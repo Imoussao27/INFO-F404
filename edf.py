@@ -28,9 +28,7 @@ class earliest_deadline_first(algorithm):
         :param period: list of element of period
         :return: feasibility interval for EDF
         """
-        print(period)
         l = sum(WCET)
-        print(l)
         isFeasibility = False
         while not isFeasibility:
             lk = 0
@@ -47,5 +45,5 @@ class earliest_deadline_first(algorithm):
         else:
             return False  # not schedule
 
-    def visualization(self, listAllTasks, name):
-        super().visualizationTool(listAllTasks, self.size, self.numberOfTask, name)
+    def visualization(self, listAllTasks, name, nameAlgo):
+        super().visualizationTool(listAllTasks, self.size, self.numberOfTask, name, nameAlgo)

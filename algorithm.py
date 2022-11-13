@@ -93,7 +93,7 @@ class algorithm:
     def getSchedule(self):
         return self.isSchedule
 
-    def visualizationTool(self, listAllTasks, size, numberOfTask, name):
+    def visualizationTool(self, listAllTasks, size, numberOfTask, name, nameAlgo):
         """
          Function to create a graphical to visual the representation of the execution
         :param listAllTasks: list of all task with job
@@ -124,7 +124,7 @@ class algorithm:
         if self.deadlineMiss != None:
             plt.title("DEADLINE MISS : " + self.deadlineMiss, color="red")
 
-        plt.savefig(name + ".png")
+        plt.savefig(name + "_" + nameAlgo + ".png")
 
     def settingTicks(self, size):
         """
