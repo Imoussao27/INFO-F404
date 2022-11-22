@@ -2,6 +2,10 @@ from rm import *
 from edf import*
 import sys
 
+"""
+Imane Moussaoui 496221
+"""
+
 def readFile(nameFile):  # read file taskset
     """
     Read a file and return his contents in two lists
