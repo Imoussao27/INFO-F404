@@ -1,6 +1,5 @@
 from Core import *
 
-
 class Partitioner:
     def __init__(self, tasks, heuristic, sort, limit, cores_number):
         self.heuristic = heuristic #ff wf bf nf
@@ -12,33 +11,10 @@ class Partitioner:
         self.can_be_partitioned = True
 
     def is_partitioned(self):
-        """
-        Get if the partitioner can partition the task set according to the given combination
-
-        :return: True there is a partition otherwise False
-        """
         return self.can_be_partitioned
 
     def get_cores(self):
-        """
-        Get the cores obtained after the partition
-
-        :return: the list of the cores
-        """
         return [core for core in self.cores if core.get_utilization() > 0]
-
-    def sort_cores(self, sort):
-        """
-        Sorts the cores in a given order, the result is an ordered list of cores
-
-        :param sort: the sorting algorithm to use,
-                    - "bf" : the highest utilisation factor
-                    - "wf" : the lowest utilisation factor
-        """
-        if sort == "bf":
-            self.cores.sort(key=lambda partition: partition.utilization, reverse=True)
-        elif sort == "wf":
-            self.cores.sort(key=lambda partition: partition.utilization)
 
     def can_be_placed(self, task, current):
         """
@@ -71,29 +47,32 @@ class Partitioner:
 
     def wf_fit(self):
         """
-        Assign the task τi on the processor with the lowest utilisation factor able to accept it
+        Worst fit
         """
         for task in self.tasks:
             if not self.can_be_placed(task, 0):
                 self.can_be_partitioned = False
-            self.sort_cores("wf")
+            self.cores.sort(key=lambda partition: partition.utilization)
 
     def bf_fit(self):
         """
-        Assign the task τi on the first processor with the highest utilisation factor able to accept it
+        Best fit
         """
         for task in self.tasks:
             if not self.can_be_placed(task, 0):
                 self.can_be_partitioned = False
-            self.sort_cores("bf")
+            self.cores.sort(key=lambda partition: partition.utilization, reverse=True)
 
     def nf_fit(self):
         """
-        Only the last cores used can receive tasks. When it is not possible to place the task τi, the current
-        core is closed (it will no longer be able to receive new tasks). The next cores then becomes the new
-        current core.
+        Next fit
         """
         for task in self.tasks:
             if not self.can_be_placed(task, self.last_core_used):
                 self.can_be_partitioned = False
 
+    def du(self):
+        self.tasks.sort(key=lambda task: task.utilization, reverse=True)
+
+    def iu(self):
+        self.tasks.sort(key=lambda task: task.utilization)

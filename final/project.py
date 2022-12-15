@@ -20,8 +20,9 @@ def readFile(nameFile):
 
     return tasks
 
-def run(tasks, heuristic, sort, limit, cores_number):
-    partitioner = Partitioner(tasks, heuristic, sort, limit, cores_number)  # genre limit = 400
+def run(tasks, heuristic, order, limit, cores_number):
+    partitioner = Partitioner(tasks, heuristic, order, limit, cores_number)  # genre limit = 400
+    switchOrder(partitioner, order)
     switchHeuristic(partitioner, heuristic)
 
     if partitioner.is_partitioned():
@@ -34,12 +35,15 @@ def run(tasks, heuristic, sort, limit, cores_number):
 def switchHeuristic(partitioner, heuristic):
     return getattr(partitioner, str(heuristic) + '_fit')()
 
+def switchOrder(partitioner, order):
+    return getattr(partitioner, str(order))()
+
 
 if __name__ == '__main__':
     heuristic = "wf"
-    sort = "du"
+    order = "du"
     limit = 400
     cores_number = 2
     tasks = readFile("taskset.txt")  #une liste de task de type task
 
-    run(tasks, heuristic, sort, limit, cores_number)
+    run(tasks, heuristic, order, limit, cores_number)
