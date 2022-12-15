@@ -33,7 +33,7 @@ def run(tasks, heuristic, order, limit, cores_number):
         print("Cannot be partitioned")
 
 def switchHeuristic(partitioner, heuristic):
-    return getattr(partitioner, str(heuristic) + '_fit')()
+    return getattr(partitioner, str(heuristic))()
 
 def switchOrder(partitioner, order):
     return getattr(partitioner, str(order))()

@@ -7,6 +7,7 @@ class Partitioner:
         self.limit = limit
         self.tasks = tasks #list of task
         self.cores = [Core(i + 1) for i in range(cores_number)]
+        self.sizeCore = len(self.cores)
         self.last_core_used = 0
         self.can_be_partitioned = True
 
@@ -17,27 +18,20 @@ class Partitioner:
         return [core for core in self.cores if core.get_utilization() > 0]
 
     def can_be_placed(self, task, current):
-        """
-        Try to place a task in one of the cores starting from the current core
-
-        :param task: the task to place
-        :param current: the current core to use
-        :return: True if the task can be placed in one of the cores otherwise False
-        """
-        it = current
-        while it < len(self.cores):
-            self.last_core_used = it
-            self.cores[it].add_task(task)
-            res = self.cores[it].is_scheduling(self.limit)
+        copy_current = current
+        while copy_current < self.sizeCore:
+            self.last_core_used = copy_current
+            self.cores[copy_current].add_task(task) #add task
+            res = self.cores[copy_current].is_scheduling(self.limit) #verify scheduling
             task.reset()
             if not res:
-                self.cores[it].remove_task()
-                it += 1
+                self.cores[copy_current].remove_task()
+                copy_current += 1
             else:
                 return True
         return False
 
-    def ff_fit(self):
+    def ff(self):
         """
         First fit
         """
@@ -45,7 +39,7 @@ class Partitioner:
             if not self.can_be_placed(task, 0):
                 self.can_be_partitioned = False
 
-    def wf_fit(self):
+    def wf(self):
         """
         Worst fit
         """
@@ -54,7 +48,7 @@ class Partitioner:
                 self.can_be_partitioned = False
             self.cores.sort(key=lambda partition: partition.utilization)
 
-    def bf_fit(self):
+    def bf(self):
         """
         Best fit
         """
@@ -63,7 +57,7 @@ class Partitioner:
                 self.can_be_partitioned = False
             self.cores.sort(key=lambda partition: partition.utilization, reverse=True)
 
-    def nf_fit(self):
+    def nf(self):
         """
         Next fit
         """
@@ -72,7 +66,14 @@ class Partitioner:
                 self.can_be_partitioned = False
 
     def du(self):
+        """
+        Decreasing utilisation
+        """
         self.tasks.sort(key=lambda task: task.utilization, reverse=True)
 
     def iu(self):
+        """
+        Increasing utilisation
+        :return:
+        """
         self.tasks.sort(key=lambda task: task.utilization)
