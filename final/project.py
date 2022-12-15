@@ -20,13 +20,8 @@ def readFile(nameFile):
 
     return tasks
 
-if __name__ == '__main__':
-    heuristic="ff"
-    sort="du"
-    limit=400
-    cores_number=2
-    tasks = readFile("taskset.txt")  #une liste de task de type task
-    partitioner = Partitioner(tasks, heuristic, sort, limit, cores_number) #genre limit = 400
+def run(tasks, heuristic, sort, limit, cores_number):
+    partitioner = Partitioner(tasks, heuristic, sort, limit, cores_number)  # genre limit = 400
     partitioner.run()
 
     if partitioner.is_partitioned():
@@ -35,3 +30,13 @@ if __name__ == '__main__':
             core.schedule(limit)
     else:
         print("Cannot be partitioned")
+
+
+if __name__ == '__main__':
+    heuristic = "ff"
+    sort = "du"
+    limit = 400
+    cores_number = 2
+    tasks = readFile("taskset.txt")  #une liste de task de type task
+
+    run(tasks, heuristic, sort, limit, cores_number)
