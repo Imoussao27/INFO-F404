@@ -22,7 +22,7 @@ def readFile(nameFile):
 
 def run(tasks, heuristic, sort, limit, cores_number):
     partitioner = Partitioner(tasks, heuristic, sort, limit, cores_number)  # genre limit = 400
-    partitioner.run()
+    switchHeuristic(partitioner, heuristic)
 
     if partitioner.is_partitioned():
         for core in partitioner.get_cores():
@@ -30,6 +30,9 @@ def run(tasks, heuristic, sort, limit, cores_number):
             core.schedule(limit)
     else:
         print("Cannot be partitioned")
+
+def switchHeuristic(partitioner, heuristic):
+    return getattr(partitioner, str(heuristic) + '_fit')()
 
 
 if __name__ == '__main__':
