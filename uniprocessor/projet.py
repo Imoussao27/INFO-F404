@@ -37,6 +37,7 @@ def periodOfTasks(maxTask, WCET, period):
     """
     listPeriodOfTasks = []
     listWCETOfTasks = []
+    print("period=", period)
     for element in period:
         listJob = []
         listJobWCET = []
@@ -57,6 +58,9 @@ def numberOfTasks(WCET, liste):
     :param liste: a list with job deadline
     :return: a list of list with the number WCET for the period
     """
+    print(liste)
+    print(WCET)
+    print("-------------------------------------")
     newListe = []
     for i in range(len(liste)):
         miniListe = []
@@ -176,6 +180,7 @@ def runAlgorithm(algorithm, WCET, period, listsTasks):
     """
     listOrderPriority = orderPriority(period)
     listNumberOfTasks = numberOfTasks(WCET, listsTasks[0])
+    print(listNumberOfTasks)
     listRateMonotonic = algorithm.run(listNumberOfTasks, listOrderPriority)
     listToPrint = tasksWithTimes(listRateMonotonic)
     sortedListToPrint = addJobOnTask(listToPrint, listsTasks[1])
@@ -183,8 +188,8 @@ def runAlgorithm(algorithm, WCET, period, listsTasks):
 
 
 def main():
-    nameFile = sys.argv[2]
-    nameAlgo = sys.argv[1].lower()
+    nameFile = "taskset1"#sys.argv[2]
+    nameAlgo = "edf"#sys.argv[1].lower()
     if nameAlgo == "rm" or nameAlgo == "edf":
         print("Running with " + nameAlgo.upper())
         lists = readFile(nameFile)  # order priority

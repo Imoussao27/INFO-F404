@@ -4,7 +4,7 @@ from algos import RM, EDF
 
 if __name__ == "__main__":
     algo = RM()
-    scheduler = Scheduler("taskset", algo)
+    scheduler = Scheduler("test", algo)
     fi = scheduler.feasability_interval()
     print(fi)
     scheduler.run(fi.stop)
