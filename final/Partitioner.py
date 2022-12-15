@@ -63,13 +63,13 @@ class Partitioner:
 
     def ff_fit(self):
         """
-        Assign the task τi on the first processor able to accept it, in the order of their indexes
+        First fit
         """
         for task in self.tasks:
             if not self.can_be_placed(task, 0):
                 self.can_be_partitioned = False
 
-    def wt_fit(self):
+    def wf_fit(self):
         """
         Assign the task τi on the processor with the lowest utilisation factor able to accept it
         """
@@ -78,7 +78,7 @@ class Partitioner:
                 self.can_be_partitioned = False
             self.sort_cores("wf")
 
-    def bt_fit(self):
+    def bf_fit(self):
         """
         Assign the task τi on the first processor with the highest utilisation factor able to accept it
         """
@@ -87,7 +87,7 @@ class Partitioner:
                 self.can_be_partitioned = False
             self.sort_cores("bf")
 
-    def nt_fit(self):
+    def nf_fit(self):
         """
         Only the last cores used can receive tasks. When it is not possible to place the task τi, the current
         core is closed (it will no longer be able to receive new tasks). The next cores then becomes the new

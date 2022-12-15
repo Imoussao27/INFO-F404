@@ -131,3 +131,8 @@ class EDFScheduler:
             if job.deadline <= limit:
                 self.timeline[job.deadline]["deadline"].append("> Deadline of {}".format(job.get_id()))
 
+        """for t in range(0, limit + 1):
+            print("Instant {}:".format(t))
+            for event in self.timeline[t]:
+                for e in self.timeline[t][event]:
+                    print("\t" + e)"""

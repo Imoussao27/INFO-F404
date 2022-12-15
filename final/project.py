@@ -36,7 +36,7 @@ def switchHeuristic(partitioner, heuristic):
 
 
 if __name__ == '__main__':
-    heuristic = "ff"
+    heuristic = "wf"
     sort = "du"
     limit = 400
     cores_number = 2
