@@ -1,10 +1,31 @@
-from Parser import *
+import sys
+from Task import *
 from Partitioner import *
 
+
+def readFile(nameFile):
+    """
+    Read file to create a list with task information
+    :param nameFile: name of file
+    :return: a list of task
+    """
+    tasks = []
+    f = open(nameFile)
+    index = 0
+    for line in f:
+        value = line.strip().split()  # Crée les task
+        tasks.append(Task(index, int(value[0]), int(value[1]), int(value[2]), int(value[3])))
+        index += 1
+    f.close()
+
+    return tasks
+
 if __name__ == '__main__':
-    parser = Parser()
-    heuristic, sort, limit, cores_number = parser.get_options()
-    tasks = parser.get_tasks()  #une liste de task de type task
+    heuristic="ff"
+    sort="du"
+    limit=400
+    cores_number=2
+    tasks = readFile("taskset.txt")  #une liste de task de type task
     partitioner = Partitioner(tasks, heuristic, sort, limit, cores_number) #genre limit = 400
     partitioner.run()
 

@@ -1,6 +1,5 @@
 from Job import *
 
-
 class Task:
     def __init__(self, id, offset, wcet, deadline, period):
         """
@@ -22,10 +21,6 @@ class Task:
         self.oldest_active_job = None
         self.jobs = []
 
-    def __str__(self):
-        return "Task number {}\noffset {}\nWCET {}\ndeadline {}\nperiod {}".format(self.id, self.offset, self.wcet,
-                                                                                   self.deadline, self.period)
-
     def init_jobs(self, limit):
         """
         Initialise the set of jobs for the periodic task in the interval [0,limit]
@@ -38,82 +33,34 @@ class Task:
             self.jobs.append(Job(self, k))
             k += 1
 
-    def get_offset(self):
-        """
-        Get the task offset
-
-        :return: the task offset
-        """
-        return self.offset
-
-    def get_deadline(self):
-        """
-        Get the task deadline
-
-        :return: the task deadline
-        """
-        return self.deadline
-
-    def get_period(self):
-        """
-        Get the task period
-
-        :return: the task period
-        """
+    def getPeriod(self):
         return self.period
 
-    def get_utilization(self):
-        """
-        Get the task utilization (represent the division of wcet by the period)
-
-        :return: the task utilization
-        """
+    def getUtilization(self):
         return self.utilization
 
-    def get_jobs(self):
-        """
-        Get all jobs generated from the task
-
-        :return: the list of the jobs
-        """
+    def getJobs(self):
         return self.jobs
 
-    def get_active_jobs(self):
-        """
-        Get the number of the active jobs during the simulation
-
-        :return: the active jobs number
-        """
+    def getActive_jobs(self):
         return self.active_jobs
 
-    def get_oldest_active_job(self):
-        """
-        Get the oldest active job of the task at this moment of the simulation
-
-        :return: the oldest active job of the task
-        """
+    def getOldest_active_job(self):
         return self.oldest_active_job
 
-    def set_oldest_active_job(self, job):
-        """
-        set the job as the oldest active job in the task at this moment of the simulation
-
-        :param job: the oldest job
-        """
+    def setOldest_active_job(self, job):
         if not self.oldest_active_job:
             self.oldest_active_job = job
 
-    def increase_active_jobs(self):
-        """
-        Increase the number of the active jobs
-        """
+    def increaseActive_jobs(self):
         self.active_jobs += 1
 
-    def decrease_active_jobs(self):
-        """
-        Decrease the number of the active jobs
-        """
+    def decreaseActive_jobs(self):
         self.active_jobs -= 1
+
+    def reset(self):
+        self.active_jobs = 0
+        self.oldest_active_job = None
 
     def configuration(self, t):
         """
@@ -130,10 +77,3 @@ class Task:
         beta = 0 if alpha == 0 else self.oldest_active_job.get_cumulative_time()
 
         return gamma, alpha, beta
-
-    def reset(self):
-        """
-        Reset some fields of the task
-        """
-        self.active_jobs = 0
-        self.oldest_active_job = None

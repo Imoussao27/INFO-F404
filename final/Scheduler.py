@@ -22,7 +22,7 @@ class EDFScheduler:
         jobs = []
         for task in self.tasks:
             task.init_jobs(limit)
-            jobs += task.get_jobs()
+            jobs += task.getJobs()
         return sorted(jobs, key=attrgetter('deadline', 'offset'))
 
     def get_o_max(self):
@@ -33,8 +33,8 @@ class EDFScheduler:
         """
         o_max = 0
         for task in self.tasks:
-            if o_max < task.get_offset():
-                o_max = task.get_offset()
+            if o_max < task.offset:
+                o_max = task.offset
         return o_max
 
     def get_p(self):
@@ -45,7 +45,7 @@ class EDFScheduler:
         """
         period_list = []
         for task in self.tasks:
-            period_list.append(task.get_period())
+            period_list.append(task.getPeriod())
         return lcm(*period_list)
 
     def get_configurations(self, t):
@@ -78,7 +78,7 @@ class EDFScheduler:
             is_selected, it = False, 0
             while not is_selected and jobs and it < len(jobs):
                 job = jobs[it]
-                if job.get_offset() <= t and job.get_offset() < limit and job.get_state() != "Done":
+                if job.offset <= t and job.offset < limit and job.get_state() != "Done":
                     job.run()
                     job.stop()
                     if job.get_state() == "Done":
@@ -103,7 +103,7 @@ class EDFScheduler:
             is_selected, it = False, 0
             while not is_selected and jobs and it < len(jobs):
                 job = jobs[it]
-                if job.get_offset() <= t and job.get_offset() < limit and job.get_state() != "Done":
+                if job.offset <= t and job.offset < limit and job.get_state() != "Done":
                     self.timeline[t]["running"].append("> {} is running".format(job.get_id()))
                     job.run()
                     job.stop()
@@ -125,9 +125,9 @@ class EDFScheduler:
 
         for job in jobs:
 
-            self.timeline[job.get_offset()]["release"].append(
-                "> {} released (deadline = {})".format(job.get_id(), job.get_deadline()))
+            self.timeline[job.offset]["release"].append(
+                "> {} released (deadline = {})".format(job.get_id(), job.deadline))
 
-            if job.get_deadline() <= limit:
-                self.timeline[job.get_deadline()]["deadline"].append("> Deadline of {}".format(job.get_id()))
+            if job.deadline <= limit:
+                self.timeline[job.deadline]["deadline"].append("> Deadline of {}".format(job.get_id()))
 
