@@ -1,5 +1,5 @@
 import sys
-from Task import *
+from models import *
 from Partitioner import *
 
 
