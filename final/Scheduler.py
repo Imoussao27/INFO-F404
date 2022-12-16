@@ -26,11 +26,6 @@ class EDFScheduler:
         return sorted(jobs, key=attrgetter('deadline', 'offset'))
 
     def get_o_max(self):
-        """
-        Get the maximum tasks set offset value
-
-        :return: the maximum offset
-        """
         o_max = 0
         for task in self.tasks:
             if o_max < task.offset:
@@ -38,23 +33,12 @@ class EDFScheduler:
         return o_max
 
     def get_p(self):
-        """
-        Get the hyper-period of the tasks set
-
-        :return: the hyper-period
-        """
         period_list = []
         for task in self.tasks:
             period_list.append(task.getPeriod())
         return lcm(*period_list)
 
     def get_configurations(self, t):
-        """
-        Get the configuration of the tasks set at instant t
-
-        :param t: instant t
-        :return: the list of configurations of the tasks set
-        """
         return [task.configuration(t) for task in self.tasks]
 
     def is_scheduling(self, limit):
@@ -64,9 +48,10 @@ class EDFScheduler:
         :param limit: the time step limit for the simulator
         :return: True if the jobs of a core can be scheduled otherwise False
         """
-        o_max, p = self.get_o_max(), self.get_p()
-        t1, t2 = o_max + p, o_max + p * 2
+        t1 = self.get_o_max() + self.get_p()
+        t2 = self.get_o_max() + self.get_p() * 2
         jobs = self.sort_all_jobs(limit)
+
         for t in range(0, limit + 1):
             if t == t1:
                 conf1 = self.get_configurations(t1)
@@ -100,7 +85,8 @@ class EDFScheduler:
         self.timeline = {i: {"release": [], "deadline": [], "running": []} for i in range(limit + 1)}
 
         for t in range(0, limit + 1):
-            is_selected, it = False, 0
+            is_selected =  False
+            it =0
             while not is_selected and jobs and it < len(jobs):
                 job = jobs[it]
                 if job.offset <= t and job.offset < limit and job.get_state() != "Done":
