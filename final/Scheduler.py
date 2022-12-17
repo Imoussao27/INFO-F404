@@ -39,12 +39,11 @@ class Scheduler:
             is_selected, it = False, 0
             while not is_selected and jobs and it < len(jobs):
                 job = jobs[it]
-                if job.offset <= t and job.offset < limit and job.get_state() != True :
-                    job.run()
-                    job.stop()
-                    if job.get_state() == True :
+                if job.offset <= t and job.offset < limit and job.state != True :
+                    job.startJob()
+                    if job.state == True :
                         jobs.pop(it)
-                        if not job.is_deadline_met(t):
+                        if not t + 1 <= job.deadline:
                             return False
                     is_selected = True
 
@@ -72,16 +71,15 @@ class Scheduler:
                 p = 0 #index for the list of priority
                 while p < len(priority) and not running:
                     job = jobs[index]
-                    if job.task.id == priority[p] and job.offset <= t and job.offset < feasibility and not job.get_state(): #!= "Done"
-                        self.allTasks[t]["job"].append("{}".format(job.get_id()))
-                        job.run()
-                        job.stop()
-                        if job.get_state(): # == "Done":
+                    if job.task.id == priority[p] and job.offset <= t and job.offset < feasibility and not job.state: #!= "Done"
+                        self.allTasks[t]["job"].append("{}".format(job.idToString()))
+                        job.startJob()
+                        if job.state: # == "Done":
                             jobs.pop(index)
                         running = True
 
                     elif job.deadline <= t:
-                        self.allTasks[t]["deadline miss"].append("{}".format(job.get_id()))
+                        self.allTasks[t]["deadline miss"].append("{}".format(job.idToString()))
                         return feasibility, self.allTasks
                     else:
                         index += 1
@@ -104,16 +102,15 @@ class Scheduler:
             it = 0
             while not is_selected and jobs and it < len(jobs):
                 job = jobs[it]
-                if job.offset <= t and job.offset < feasibility and not job.get_state():
-                    self.allTasks[t]["job"].append("{}".format(job.get_id()))
-                    job.run()
-                    job.stop()
-                    if job.get_state():
+                if job.offset <= t and job.offset < feasibility and not job.state:
+                    self.allTasks[t]["job"].append("{}".format(job.idToString()))
+                    job.startJob()
+                    if job.state:
                         jobs.pop(it)
                     is_selected = True
 
                 if job.deadline <= t:
-                    self.allTasks[t]["deadline miss"].append("{}".format(job.get_id()))
+                    self.allTasks[t]["deadline miss"].append("{}".format(job.idToString()))
                     return feasibility, self.allTasks
 
                 it += 1

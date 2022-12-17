@@ -39,7 +39,7 @@ class Core:
 
     def schedule(self, limit):
         #TODO: appeler ici les algo with param
-        #self.scheduler.run(feasibility)
+        #self.scheduler.startJob(feasibility)
         feasibility, allTasks = self.scheduler.runAlgo(EDF(self.tasks))
         self.scheduler.algo.toPrint(feasibility, allTasks)
 
