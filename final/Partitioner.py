@@ -22,11 +22,11 @@ class Core:
 
     def add_task(self, task):
         self.tasks.append(task)
-        self.utilization += task.getUtilization()
+        self.utilization += task.utilization
 
     def remove_task(self):
         task = self.tasks.pop()
-        self.utilization -= task.getUtilization()
+        self.utilization -= task.utilization
 
     def get_utilization(self):
         return self.utilization

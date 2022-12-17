@@ -17,7 +17,7 @@ class Scheduler:
     def get_p(self):
         period_list = []
         for task in self.tasks:
-            period_list.append(task.getPeriod())
+            period_list.append(task.period)
         return lcm(*period_list)
 
     def get_configurations(self, t):

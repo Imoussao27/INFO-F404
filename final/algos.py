@@ -9,7 +9,7 @@ class Algo:
         jobs = []
         for task in self.tasks:
             task.init_jobs(feasibility)
-            jobs += task.getJobs()
+            jobs += task.jobs
         return sorted(jobs, key=attrgetter('deadline', 'offset'))
 
     def getPriority(self, liste):
