@@ -75,11 +75,34 @@ class EDFScheduler:
                 it += 1
         return True
 
+    def getListPeriod(self):
+        listPeriod = []
+        for element in self.tasks:
+            listPeriod.append((element.period, element.id))
+        return listPeriod
+
+    def getListDealine(self):
+        listDealine = []
+        for element in self.tasks:
+            listDealine.append((element.deadline, element.id))
+        return listDealine
+
+
+    def getPriority(self, liste):
+        priority = []
+        liste.sort(key=lambda x: x[0])
+        for element in liste:
+            priority.append(element[1])
+        return priority
+
+
     def runtest(self, limit):
+
         jobs = self.sort_all_jobs(limit)
         self.timeline = {i: {"release": [], "deadline": [], "running": []} for i in range(limit + 1)}
 
-        priority = [1, 2, 0] #TODO: faire ça de manière générale
+        priority = self.getPriority(self.getListPeriod()) #[1, 2, 0] #TODO: faire ça de manière générale
+        print("PRIORITY", priority)
         #TODO: POUR RM -> PERIOD (but demander pour etre sure)
         #TODO: POUR DM -> DEADLINE
 
