@@ -1,4 +1,6 @@
 from Scheduler import Scheduler
+from algos import RM, EDF, DM
+
 
 class Core:
     def __init__(self, id):
@@ -38,7 +40,8 @@ class Core:
     def schedule(self, limit):
         #TODO: appeler ici les algo with param
         #self.scheduler.run(feasibility)
-        self.scheduler.runtest(limit)
+        feasibility, allTasks = self.scheduler.runAlgo(EDF(self.tasks))
+        self.scheduler.algo.toPrint(feasibility, allTasks)
 
 
 class Partitioner:
