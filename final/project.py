@@ -21,7 +21,7 @@ def readFile(nameFile):
     return tasks
 
 def run(tasks, heuristic, order, limit, cores_number):
-    partitioner = Partitioner(tasks, heuristic, order, limit, cores_number)  # genre limit = 400
+    partitioner = Partitioner(tasks, heuristic, order, limit, cores_number)  # genre feasibility = 400
     switchOrder(partitioner, order)
     switchHeuristic(partitioner, heuristic)
 

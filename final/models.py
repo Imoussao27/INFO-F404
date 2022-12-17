@@ -84,9 +84,9 @@ class Task:
 
     def init_jobs(self, limit):
         """
-        Initialise the set of jobs for the periodic task in the interval [0,limit]
+        Initialise the set of jobs for the periodic task in the interval [0,feasibility]
 
-        :param limit: the time step limit for the simulator
+        :param limit: the time step feasibility for the simulator
         """
         self.jobs = []
         k = 1

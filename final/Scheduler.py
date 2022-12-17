@@ -16,7 +16,7 @@ class Scheduler:
         """
         Sorting the core's jobs in an increasing way using the (deadline, offset) key
 
-        :param limit: the time step limit for the simulator
+        :param limit: the time step feasibility for the simulator
         :return: an ordered list of all the core's jobs
         """
         jobs = []
@@ -45,7 +45,7 @@ class Scheduler:
         """
         Try to schedule the jobs of a core
 
-        :param limit: the time step limit for the simulator
+        :param limit: the time step feasibility for the simulator
         :return: True if the jobs of a core can be scheduled otherwise False
         """
         t1 = self.get_o_max() + self.get_p()
@@ -95,25 +95,28 @@ class Scheduler:
             priority.append(element[1])
         return priority
 
-
-    def runtest(self, limit):
-
+    def init_run(self, limit):
         jobs = self.sort_all_jobs(limit)
         self.allTasks = {i: {"deadline miss": [], "job": []} for i in range(limit + 1)}
+        priority = self.getPriority(self.getListPeriod())
+        return jobs, priority
 
-        priority = self.getPriority(self.getListPeriod()) #[1, 2, 0] #TODO: faire ça de manière générale
-        print("PRIORITY", priority)
+
+    def runtest(self, feasibility):
+
+        jobs, priority = self.init_run(feasibility)
+
         #TODO: POUR RM -> PERIOD (but demander pour etre sure)
         #TODO: POUR DM -> DEADLINE
 
-        for t in range(0, limit):
+        for t in range(feasibility):
             running = False
             index = 0
             while not running and jobs and index < len(jobs):
-                p = 0
+                p = 0 #index for the priority
                 while p < len(priority) and not running: #TODO: VOIR SI ON PEUT CREER UNE FUNCTION
                     job = jobs[index]
-                    if job.task.id == priority[p] and job.offset <= t and job.offset < limit and job.get_state() != "Done":
+                    if job.task.id == priority[p] and job.offset <= t and job.offset < feasibility and job.get_state() != "Done":
                         p = 0
                         self.allTasks[t]["job"].append("{}".format(job.get_id()))
                         job.run()
@@ -124,7 +127,7 @@ class Scheduler:
 
                     elif job.deadline <= t:
                         self.allTasks[t]["deadline miss"].append("{}".format(job.get_id()))
-                        return self.print_timeline(limit)
+                        return self.print_timeline(feasibility)
                     else:
                         index += 1
 
@@ -136,13 +139,15 @@ class Scheduler:
 
                 index += 1
 
-        self.print_timeline(limit)
+        return self.print_timeline(feasibility)
+
+
 
     def run(self, limit):
         """
         Simulate the execution of the EDF scheduler on the core's tasks set
 
-        :param limit: the time step limit for the simulator
+        :param limit: the time step feasibility for the simulator
         """
         jobs = self.sort_all_jobs(limit)
         self.allTasks = {i: {"release": [], "deadline": [], "running": []} for i in range(limit + 1)}
@@ -169,7 +174,7 @@ class Scheduler:
         """
         A textual overview of what happening during the simulation
 
-        :param limit: the time step limit for the simulator
+        :param limit: the time step feasibility for the simulator
         """
         jobs = self.sort_all_jobs(limit)
 
@@ -178,7 +183,7 @@ class Scheduler:
             self.allTasks[job.offset]["release"].append(
                 "> {} released (deadline = {})".format(job.get_id(), job.deadline))
 
-            if job.deadline <= limit:
+            if job.deadline <= feasibility:
                 self.allTasks[job.deadline]["deadline"].append("> Deadline of {}".format(job.get_id()))"""
         task = ""
         oldtime = 0
