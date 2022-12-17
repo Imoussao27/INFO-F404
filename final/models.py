@@ -11,7 +11,7 @@ class Job:
         self.offset = task.offset + (id - 1) * task.period
         self.wcet = task.wcet
         self.deadline = task.offset + (id - 1) * task.period + task.deadline
-        self.state = "Undone"
+        self.state = False #"Undone"
         self.time_remaining = self.wcet
 
     def get_task(self):
@@ -47,16 +47,18 @@ class Job:
         """
         self.decrease()
         self.task.setOldest_active_job(self)
-        if self.state == "Undone":
+        if self.state == False: #"Undone":
             self.task.increaseActive_jobs()
-            self.state = "Running"
+            self.state = None
+            #self.state = "Running"
 
     def stop(self):
         """
         Stop the job execution
         """
         if self.time_remaining == 0:
-            self.set_state("Done")
+            self.set_state(True)
+            #self.set_state("Done")
             self.task.decreaseActive_jobs()
             if self.task.getOldest_active_job().get_id() == self.id:
                 self.task.setOldest_active_job(None)

@@ -63,10 +63,10 @@ class Scheduler:
             is_selected, it = False, 0
             while not is_selected and jobs and it < len(jobs):
                 job = jobs[it]
-                if job.offset <= t and job.offset < limit and job.get_state() != "Done":
+                if job.offset <= t and job.offset < limit and job.get_state() != True :#!= "Done":
                     job.run()
                     job.stop()
-                    if job.get_state() == "Done":
+                    if job.get_state() == True :#== "Done":
                         jobs.pop(it)
                         if not job.is_deadline_met(t):
                             return False
@@ -111,17 +111,16 @@ class Scheduler:
 
         for t in range(feasibility):
             running = False
-            index = 0
+            index = 0  #index for the list of jobs
             while not running and jobs and index < len(jobs):
-                p = 0 #index for the priority
+                p = 0 #index for the list of priority
                 while p < len(priority) and not running: #TODO: VOIR SI ON PEUT CREER UNE FUNCTION
                     job = jobs[index]
-                    if job.task.id == priority[p] and job.offset <= t and job.offset < feasibility and job.get_state() != "Done":
-                        p = 0
+                    if job.task.id == priority[p] and job.offset <= t and job.offset < feasibility and not job.get_state(): #!= "Done"
                         self.allTasks[t]["job"].append("{}".format(job.get_id()))
                         job.run()
                         job.stop()
-                        if job.get_state() == "Done":
+                        if job.get_state(): # == "Done":
                             jobs.pop(index)
                         running = True
 
