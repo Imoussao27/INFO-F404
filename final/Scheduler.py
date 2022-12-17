@@ -50,6 +50,7 @@ class Scheduler:
                 it += 1
         return True
 
+ #----------------------------------------------OKAY------------------------------------
 
     def init_run(self, limit):
         jobs = self.algo.getListJobs(limit)
@@ -64,23 +65,17 @@ class Scheduler:
 
         jobs = self.init_run(feasibility)
 
-        for t in range(feasibility):
+        for time in range(feasibility):
             running = False
             index = 0  #index for the list of jobs
             while not running and jobs and index < len(jobs):
                 p = 0 #index for the list of priority
                 while p < len(priority) and not running:
                     job = jobs[index]
-                    if job.task.id == priority[p] and job.offset <= t and job.offset < feasibility and not job.state: #!= "Done"
-                        self.allTasks[t]["job"].append("{}".format(job.idToString()))
-                        job.startJob()
-                        if job.state: # == "Done":
-                            jobs.pop(index)
-                        running = True
-
-                    elif job.deadline <= t:
-                        self.allTasks[t]["deadline miss"].append("{}".format(job.idToString()))
-                        return feasibility, self.allTasks
+                    if job.task.id == priority[p] and job.offset <= time and job.offset < feasibility and not job.state: #!= "Done"
+                        running = self.runningJob(index, job, jobs, time)
+                    elif job.deadline <= time:
+                        return self.deadlineMiss(feasibility, job, time)
                     else:
                         index += 1
 
@@ -92,29 +87,34 @@ class Scheduler:
 
         return feasibility, self.allTasks
 
-
     def runEDF(self, feasibility):
 
         jobs = self.init_run(feasibility)
 
-        for t in range(0, feasibility + 1):
-            is_selected = False
-            it = 0
-            while not is_selected and jobs and it < len(jobs):
-                job = jobs[it]
-                if job.offset <= t and job.offset < feasibility and not job.state:
-                    self.allTasks[t]["job"].append("{}".format(job.idToString()))
-                    job.startJob()
-                    if job.state:
-                        jobs.pop(it)
-                    is_selected = True
+        for time in range(0, feasibility):
+            running = False
+            index = 0
+            while not running and jobs and index < len(jobs):
+                job = jobs[index]
+                if job.offset <= time and job.offset < feasibility and not job.state:
+                    running = self.runningJob(index, job, jobs, time)
 
-                if job.deadline <= t:
-                    self.allTasks[t]["deadline miss"].append("{}".format(job.idToString()))
-                    return feasibility, self.allTasks
+                if job.deadline <= time:
+                    return self.deadlineMiss(feasibility, job, time)
 
-                it += 1
+                index += 1
 
         return feasibility, self.allTasks
+
+    def deadlineMiss(self, feasibility, job, t):
+        self.allTasks[t]["deadline miss"].append("{}".format(job.idToString()))
+        return feasibility, self.allTasks
+
+    def runningJob(self, it, job, jobs, t):
+        self.allTasks[t]["job"].append("{}".format(job.idToString()))
+        job.startJob()
+        if job.state:
+            jobs.pop(it)
+        return True
 
 
