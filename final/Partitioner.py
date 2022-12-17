@@ -37,7 +37,8 @@ class Core:
 
     def schedule(self, limit):
         #TODO: appeler ici les algo with param
-        self.scheduler.run(limit)
+#        self.scheduler.run(limit)
+        self.scheduler.runtest(limit)
 
 
 class Partitioner:

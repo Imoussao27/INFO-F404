@@ -25,20 +25,22 @@ def run(tasks, heuristic, order, limit, cores_number):
     switchOrder(partitioner, order)
     switchHeuristic(partitioner, heuristic)
 
-    for core in partitioner.get_cores():
+    """for core in partitioner.get_cores():
         print("core = ", core.id)
         for task in core.tasks:
             print("task = ", task.id + 1)
-        print('---------------')
+        print('---------------')"""
 
     #TODO: ici qu'on schedule et on chosit l'algo
 
-    """if partitioner.is_partitioned():
+    if partitioner.is_partitioned():
         for core in partitioner.get_cores():
-            print(core)
+            #print(core)
             core.schedule(limit)
+            print("--------------------------------")
+
     else:
-        print("Cannot be partitioned")"""
+        print("Cannot be partitioned")
 
 def switchHeuristic(partitioner, heuristic):
     return getattr(partitioner, str(heuristic))()
@@ -48,9 +50,9 @@ def switchOrder(partitioner, order):
 
 
 if __name__ == '__main__':
-    heuristic = "wf"
+    heuristic = "ff"
     order = "du"
-    limit = 400
+    limit = 20
     cores_number = 2
     tasks = readFile("taskset.txt")  #une liste de task de type task
 

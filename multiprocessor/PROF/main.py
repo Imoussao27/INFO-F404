@@ -1,5 +1,5 @@
 #! /usr/bin/env python3
-from scheduler import Scheduler
+from schedulers import Scheduler
 from algos import RM, EDF
 
 if __name__ == "__main__":

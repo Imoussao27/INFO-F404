@@ -1,5 +1,5 @@
 from typing import List, Optional
-from models import Job, TaskSet, Interval
+from model import Job, TaskSet, Interval
 from algos import SchedulingAlgorithm
 
 

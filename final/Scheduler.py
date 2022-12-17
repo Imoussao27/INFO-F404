@@ -23,7 +23,7 @@ class EDFScheduler:
         for task in self.tasks:
             task.init_jobs(limit)
             jobs += task.getJobs()
-        return sorted(jobs, key=attrgetter('deadline', 'offset'))
+        return sorted(jobs, key=attrgetter('deadline'))
 
     def get_o_max(self):
         o_max = 0
@@ -75,6 +75,38 @@ class EDFScheduler:
                 it += 1
         return True
 
+    def runtest(self, limit):
+        jobs = self.sort_all_jobs(limit)
+        self.timeline = {i: {"release": [], "deadline": [], "running": []} for i in range(limit + 1)}
+
+        priority = [1, 2, 0] #TODO: faire ça de manière générale
+        #TODO: POUR RM -> PERIOD (but demander pour etre sure)
+        #TODO: POUR DM -> DEADLINE
+
+        for t in range(0, limit + 1):
+            is_selected = False
+            it = 0
+            while not is_selected and jobs and it < len(jobs):
+                job = jobs[it]
+                p = 0
+                ispriority = False
+                while p < len(priority) and not ispriority: #TODO: VOIR SI ON PEUT CREER UNE FUNCTION
+                    if job.task.id == priority[p] and job.offset <= t and job.offset < limit and job.get_state() != "Done":
+                        p = 0
+                        self.timeline[t]["running"].append("> {} is running".format(job.get_id()))
+                        job.run()
+                        job.stop()
+                        if job.get_state() == "Done":
+                            jobs.pop(it)
+                        is_selected = True
+                        ispriority = True
+
+                    else:
+                        p += 1
+                it += 1
+
+        self.print_timeline(limit)
+
     def run(self, limit):
         """
         Simulate the execution of the EDF scheduler on the core's tasks set
@@ -84,15 +116,20 @@ class EDFScheduler:
         jobs = self.sort_all_jobs(limit)
         self.timeline = {i: {"release": [], "deadline": [], "running": []} for i in range(limit + 1)}
 
+        for element in jobs:
+            print("T" + str(element.task.id), "J" + str(element.id) + ": [", element.offset, element.deadline, "]")
+        print("---------------------------------")
+
+
         for t in range(0, limit + 1):
-            is_selected =  False
-            it =0
+            is_selected = False
+            it = 0
             while not is_selected and jobs and it < len(jobs):
                 job = jobs[it]
                 if job.offset <= t and job.offset < limit and job.get_state() != "Done":
-                    self.timeline[t]["running"].append("> {} is running".format(job.get_id()))
-                    job.run()
-                    job.stop()
+                    toprint = self.timeline[t]["running"].append("> {} is running".format(job.get_id()))
+                    jobrun = job.run()
+                    jobstop = job.stop()
                     if job.get_state() == "Done":
                         jobs.pop(it)
                     is_selected = True
@@ -109,16 +146,16 @@ class EDFScheduler:
         """
         jobs = self.sort_all_jobs(limit)
 
-        for job in jobs:
+        """for job in jobs:
 
             self.timeline[job.offset]["release"].append(
                 "> {} released (deadline = {})".format(job.get_id(), job.deadline))
 
             if job.deadline <= limit:
-                self.timeline[job.deadline]["deadline"].append("> Deadline of {}".format(job.get_id()))
+                self.timeline[job.deadline]["deadline"].append("> Deadline of {}".format(job.get_id()))"""
 
-        """for t in range(0, limit + 1):
-            print("Instant {}:".format(t))
+        for t in range(0, limit+1):
+            #print("Instant {}:".format(t))
             for event in self.timeline[t]:
                 for e in self.timeline[t][event]:
-                    print("\t" + e)"""
+                    print("\t" + e)
