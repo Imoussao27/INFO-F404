@@ -1,4 +1,4 @@
-from Scheduler import EDFScheduler
+from Scheduler import Scheduler
 
 class Core:
     def __init__(self, id):
@@ -10,12 +10,12 @@ class Core:
         self.id = id
         self.tasks = []
         self.utilization = 0
-        self.scheduler = EDFScheduler(self.tasks) #TODO: call the good algo
+        self.scheduler = Scheduler(self.tasks) #TODO: call the good algo
 
     def __str__(self):
         res = ""
         for task in self.tasks:
-            res += "T{} U{},".format(task.id, task.utilization)
+            res += "T{} {},".format(task.id, task.utilization)
         return "Core {} contains : ".format(self.id) + res[:-1]
 
     def add_task(self, task):
@@ -37,7 +37,7 @@ class Core:
 
     def schedule(self, limit):
         #TODO: appeler ici les algo with param
-#        self.scheduler.run(limit)
+        #self.scheduler.run(limit)
         self.scheduler.runtest(limit)
 
 

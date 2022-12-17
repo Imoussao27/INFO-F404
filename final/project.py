@@ -11,7 +11,7 @@ def readFile(nameFile):
     """
     tasks = []
     f = open(nameFile)
-    index = 0
+    index = 1
     for line in f:
         value = line.strip().split()  # Crée les task
         tasks.append(Task(index, int(value[0]), int(value[1]), int(value[2]), int(value[3])))
@@ -35,7 +35,7 @@ def run(tasks, heuristic, order, limit, cores_number):
 
     if partitioner.is_partitioned():
         for core in partitioner.get_cores():
-            #print(core)
+            print(core)
             core.schedule(limit)
             print("--------------------------------")
 
@@ -52,7 +52,7 @@ def switchOrder(partitioner, order):
 if __name__ == '__main__':
     heuristic = "ff"
     order = "du"
-    limit = 20
+    limit = 256
     cores_number = 2
     tasks = readFile("taskset.txt")  #une liste de task de type task
 
