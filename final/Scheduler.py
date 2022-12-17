@@ -4,26 +4,15 @@ from operator import attrgetter
 
 class Scheduler:
     def __init__(self, tasks):
-        """
-        A scheduler class that can schedules the jobs of core with the EDF (earliest deadline first) strategy
-
-        :param tasks: the list of the tasks
-        """
         self.tasks = tasks
         self.allTasks = []
 
     def sort_all_jobs(self, limit):
-        """
-        Sorting the core's jobs in an increasing way using the (deadline, offset) key
-
-        :param limit: the time step feasibility for the simulator
-        :return: an ordered list of all the core's jobs
-        """
         jobs = []
         for task in self.tasks:
             task.init_jobs(limit)
             jobs += task.getJobs()
-        return sorted(jobs, key=attrgetter('deadline'))
+        return sorted(jobs, key=attrgetter('deadline', 'offset'))
 
     def get_o_max(self):
         o_max = 0
@@ -42,12 +31,6 @@ class Scheduler:
         return [task.configuration(t) for task in self.tasks]
 
     def is_scheduling(self, limit):
-        """
-        Try to schedule the jobs of a core
-
-        :param limit: the time step feasibility for the simulator
-        :return: True if the jobs of a core can be scheduled otherwise False
-        """
         t1 = self.get_o_max() + self.get_p()
         t2 = self.get_o_max() + self.get_p() * 2
         jobs = self.sort_all_jobs(limit)
@@ -158,9 +141,9 @@ class Scheduler:
             while not is_selected and jobs and it < len(jobs):
                 job = jobs[it]
                 if job.offset <= t and job.offset < limit and job.get_state() != "Done":
-                    toprint = self.allTasks[t]["running"].append("{}".format(job.get_id()))
-                    jobrun = job.run()
-                    jobstop = job.stop()
+                    self.allTasks[t]["running"].append("{}".format(job.get_id()))
+                    job.run()
+                    job.stop()
                     if job.get_state() == "Done":
                         jobs.pop(it)
                     is_selected = True
@@ -169,33 +152,18 @@ class Scheduler:
 
         self.print_timeline(limit)
 
-    def print_timeline(self, limit):
-        """
-        A textual overview of what happening during the simulation
-
-        :param limit: the time step feasibility for the simulator
-        """
-        jobs = self.sort_all_jobs(limit)
-
-        """for job in jobs:
-
-            self.allTasks[job.offset]["release"].append(
-                "> {} released (deadline = {})".format(job.get_id(), job.deadline))
-
-            if job.deadline <= feasibility:
-                self.allTasks[job.deadline]["deadline"].append("> Deadline of {}".format(job.get_id()))"""
+    def print_timeline(self, feasibility):
         task = ""
         oldtime = 0
-        for t in range(0, limit+1):
-            for event in self.allTasks[t]:
-                for e in self.allTasks[t][event]:
-                    liste = self.allTasks
+        for time in range(feasibility + 1):
+            for status in self.allTasks[time]:
+                for element in self.allTasks[time][status]:
                     if task == "":
-                        task = e
-                        oldtime = t
-                    elif task != e:
-                        print(task + " ["+ str(oldtime) +" , "+ str(t) +"]")
-                        task = e
-                        oldtime = t
-                    if event == "deadline miss":
-                        print("\t" + e, event)
+                        task = element
+                        oldtime = time
+                    elif task != element:
+                        print(task + " ["+ str(oldtime) +" , "+ str(time) +"]")
+                        task = element
+                        oldtime = time
+                    if status == "deadline miss":
+                        print(status, element)
