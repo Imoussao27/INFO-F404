@@ -68,12 +68,15 @@ if __name__ == '__main__':
     else:
         exit(5)
 
-    if sys.argv[6] == "-h":
-        heuristic = sys.argv[7]
-    if sys.argv[6] == "-s":
-        order = sys.argv[7]
-    if sys.argv[8] == "-s":
-        order = sys.argv[9]
+    if len(sys.argv) == 8 or len(sys.argv) == 10:
+        if sys.argv[6] == "-h":
+            heuristic = sys.argv[7]
+        if sys.argv[6] == "-s":
+            order = sys.argv[7]
+        if len(sys.argv) == 10:
+            if sys.argv[8] == "-s":
+                order = sys.argv[9]
+        print(heuristic)
 
     #Start
     res = readFile(sys.argv[1])

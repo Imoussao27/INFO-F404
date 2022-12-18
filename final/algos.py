@@ -1,4 +1,4 @@
-from math import ceil, lcm
+from math import ceil, gcd
 from operator import attrgetter
 
 class Algo:
@@ -31,9 +31,16 @@ class Algo:
                 omax = task.offset
         return omax #Get Omax
 
+
+    def lcm(self, *integers):
+        a = integers[0]
+        for b in integers[1:]:
+            a = (a * b) // gcd(a, b)
+        return a
+
     def getP(self):
         period = self.getListPeriod()
-        return lcm(*period) #Get P
+        return self.lcm(*period) #Get P
 
     def isConstrained(self):
         """
