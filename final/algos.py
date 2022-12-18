@@ -80,7 +80,7 @@ class Algo:
     def getListJobs(self, feasibility):
         jobs = []
         for task in self.tasks:
-            task.init_jobs(feasibility)
+            task.initJobs(feasibility)
             jobs += task.jobs
         return sorted(jobs, key=attrgetter('deadline', 'offset'))
 
@@ -118,7 +118,6 @@ class Algo:
         else:
             if self.isConstrained():
                 print('Asynchronous constrained')
-                print(sum(self.getListOffset()) + self.getP() + 1)
                 return sum(self.getListOffset()) + self.getP() + 1
             else:
                 print("/!/ Asyncrhonous arbitrary /!/")

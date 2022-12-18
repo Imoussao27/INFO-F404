@@ -6,6 +6,7 @@ class Scheduler:
         self.algo = algos.Algo(tasks)
         self.allTasks = []
 
+
     def is_scheduling(self, limit):
         t1 = self.algo.getOmax() + self.algo.getP()
         t2 = self.algo.getOmax() + self.algo.getP() * 2
