@@ -2,7 +2,7 @@ from Scheduler import Scheduler
 from algos import RM, EDF, DM
 
 
-class Core:
+class Processor:
     def __init__(self, id):
         """
         A core class containing a tasks set
@@ -14,11 +14,11 @@ class Core:
         self.utilization = 0
         self.scheduler = Scheduler(self.tasks) #TODO: call the good algo
 
-    def __str__(self):
+    def ToPrint(self):
         res = ""
         for task in self.tasks:
-            res += "T{} {},".format(task.id, task.utilization)
-        return "Core {} contains : ".format(self.id) + res[:-1]
+            res += "T{}, ".format(task.id)
+        print("Processor {} : ".format(self.id) + res[:-1])
 
     def add_task(self, task):
         self.tasks.append(task)
@@ -37,20 +37,24 @@ class Core:
     def is_scheduling(self, limit):
         return self.scheduler.is_scheduling(limit)
 
-    def schedule(self, limit):
-        #TODO: appeler ici les algo with param
-        #self.scheduler.startJob(feasibility)
-        feasibility, allTasks = self.scheduler.runAlgo(EDF(self.tasks))
+    def schedule(self, algo):
+        if algo == "rm":
+            functionNameAlgo = RM(self.tasks)
+        elif algo == "dm":
+            functionNameAlgo = DM(self.tasks)
+        else:
+            functionNameAlgo = EDF(self.tasks)
+        feasibility, allTasks = self.scheduler.runAlgo(functionNameAlgo)
         self.scheduler.algo.toPrint(feasibility, allTasks)
 
 
 class Partitioner:
-    def __init__(self, tasks, heuristic, sort, limit, cores_number):
+    def __init__(self, tasks, heuristic, sort, lcm, cores_number):
         self.heuristic = heuristic #ff wf bf nf
         self.sort = sort  #du iu
-        self.limit = limit
+        self.lcm = lcm
         self.tasks = tasks #list of task
-        self.cores = [Core(i + 1) for i in range(cores_number)]
+        self.cores = [Processor(i + 1) for i in range(cores_number)]
         self.sizeCore = len(self.cores)
         self.last_core_used = 0
         self.can_be_partitioned = True
@@ -66,7 +70,7 @@ class Partitioner:
         while copy_current < self.sizeCore:
             self.last_core_used = copy_current
             self.cores[copy_current].add_task(task) #add task
-            res = self.cores[copy_current].is_scheduling(self.limit) #verify scheduling
+            res = self.cores[copy_current].is_scheduling(self.lcm) #verify scheduling
             task.reset()
             if not res:
                 self.cores[copy_current].remove_task()

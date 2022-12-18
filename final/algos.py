@@ -111,15 +111,12 @@ class Algo:
     def feasibility(self):
         if self.verifySynchronous():
             if self.isConstrained():
-                print("syncro constrained")
                 return self.getMaxDeadline() + 1
             else:
-                print("syncro arbi")
                 return self.idleInstant() + 1
 
         else:
             if self.isConstrained():
-                print("Asyncro constrained")
                 return sum(self.getListOffset()) + self.getP() + 1
             else:
                 print("/!/ Asyncrhonous arbitrary /!/")

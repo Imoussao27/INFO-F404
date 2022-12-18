@@ -1,4 +1,6 @@
 import sys
+from math import gcd
+
 from models import *
 from Partitioner import *
 
@@ -10,37 +12,31 @@ def readFile(nameFile):
     :return: a list of task
     """
     tasks = []
+    period = []
     f = open(nameFile)
     index = 1
     for line in f:
         value = line.strip().split()  # Crée les task
         tasks.append(Task(index, int(value[0]), int(value[1]), int(value[2]), int(value[3])))
+        period.append(int(value[3]))
         index += 1
     f.close()
 
-    return tasks
+    return tasks, period
 
-def run(tasks, heuristic, order, limit, cores_number):
-    partitioner = Partitioner(tasks, heuristic, order, limit, cores_number)  # genre feasibility = 400
+def run(algo, res, heuristic, order, cores_number):
+    lcm = leastCommonMultiple(res[1])
+    partitioner = Partitioner(res[0], heuristic, order, lcm, cores_number)
     switchOrder(partitioner, order)
     switchHeuristic(partitioner, heuristic)
 
-    """for core in partitioner.get_cores():
-        print("core = ", core.id)
-        for task in core.tasks:
-            print("task = ", task.id + 1)
-        print('---------------')"""
-
-    #TODO: ici qu'on schedule et on chosit l'algo
-
     if partitioner.is_partitioned():
         for core in partitioner.get_cores():
-            print(core)
-            core.schedule(limit)
-            print("--------------------------------")
-
+            core.ToPrint()
+            core.schedule(algo)
     else:
-        print("Cannot be partitioned")
+        print("The partitioning fails")
+        exit(1)
 
 def switchHeuristic(partitioner, heuristic):
     return getattr(partitioner, str(heuristic))()
@@ -48,12 +44,23 @@ def switchHeuristic(partitioner, heuristic):
 def switchOrder(partitioner, order):
     return getattr(partitioner, str(order))()
 
+def leastCommonMultiple(period):
+    """
+    Function calculate least common multiple
+    :param period: list of period
+    :return: int LCM
+    """
+    lcm = 1
+    for elem in period:
+        lcm = lcm * elem // gcd(lcm, elem)
+    return lcm
+
 
 if __name__ == '__main__':
+    algo = "RM" #TODO: HOW METTRE MAJ
     heuristic = "ff"
     order = "du"
-    limit = 256
     cores_number = 2
-    tasks = readFile("taskset.txt")  #une liste de task de type task
+    res = readFile("taskset.txt")  #une liste de task de type task
 
-    run(tasks, heuristic, order, limit, cores_number)
+    run(algo, res, heuristic, order, cores_number)
