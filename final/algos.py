@@ -6,17 +6,22 @@ class Algo:
         self.tasks = tasks
 
     def idleInstant(self):
-        wcet = self.getListWCET()
-        period = self.getListPeriod()
-        l = sum(wcet)
+        """
+        Calcul the feasibiliry
+        :return: int feasibility
+        """
+        wcet = self.getListWCET() # C
+        period = self.getListPeriod() # T
+        l = sum(wcet) #Sum(Ci)
         isFeasibility = False
         while not isFeasibility:
             lk = 0
             for i in range(len(period)):
-                lk += ceil(l / period[i]) * wcet[i]
+                lk += ceil(l / period[i]) * wcet[i] #Sum(lk/Ti) * Ci
             if lk == l:
                 isFeasibility = True
             l = lk
+
         return lk
 
     def getOmax(self):
@@ -24,13 +29,17 @@ class Algo:
         for task in self.tasks:
             if omax < task.offset:
                 omax = task.offset
-        return omax
+        return omax #Get Omax
 
     def getP(self):
         period = self.getListPeriod()
-        return lcm(*period)
+        return lcm(*period) #Get P
 
     def isConstrained(self):
+        """
+        Verify if the system is constrained
+        :return: boolean if the system is constrained
+        """
         deadline = self.getListDeadline()
         period = self.getListPeriod()
 
@@ -68,6 +77,10 @@ class Algo:
         return deadline
 
     def verifySynchronous(self):
+        """
+        Verify is the system is synchronous or Asynchronous
+        :return: True if its Aynchronous
+        """
         offset = []
         for element in self.tasks:
             offsetValue = element.offset
@@ -92,6 +105,12 @@ class Algo:
         return priority
 
     def toPrint(self, feasibility, allTasks):
+        """
+        Display the task job with their time
+        :param feasibility: intn feasibility
+        :param allTasks: list of task
+        :return: None
+        """
         task = ""
         oldtime = 0
         for time in range(feasibility + 1):
@@ -106,9 +125,13 @@ class Algo:
                         oldtime = time
                     if status == "deadline miss":
                         print(status, element)
-                        exit(4)
+                        exit(4) #Deadline miss
 
     def feasibility(self):
+        """
+        Feasibility for RM and DM
+        :return: int feasibility
+        """
         if self.verifySynchronous():
             if self.isConstrained():
                 return self.getMaxDeadline() + 1
@@ -124,7 +147,11 @@ class Algo:
                 exit(2)
 
 
+
 class RM(Algo):
+    """
+    Scheduling algorithms rate monotonic
+    """
     def __init__(self, tasks):
         self.tasks = tasks
         super().__init__(tasks)
@@ -132,7 +159,7 @@ class RM(Algo):
     def run(self, scheduler):
         feasibility = self.feasibility()
         priority = self.listePriority(self.tasks)
-        return scheduler.runXM(feasibility, priority)
+        return scheduler.runXM(feasibility, priority) #Run scheduler
 
     def listePriority(self, task):
         liste = self.getListPeriodWithID(task)
@@ -148,10 +175,15 @@ class RM(Algo):
         return super().getPriority(liste)
 
     def feasibility(self):
-        return super().feasibility()
+        feasi = super().feasibility()
+        print("Feasibility : [ 0,", feasi, "]")
+        return feasi
 
 
 class DM(Algo):
+    """
+    Scheduling algorithms deadline monotonic
+    """
     def __init__(self, tasks):
         self.tasks = tasks
         super().__init__(tasks)
@@ -175,19 +207,27 @@ class DM(Algo):
         return super().getPriority(liste)
 
     def feasibility(self):
-        return super().feasibility()
+        feasi = super().feasibility()
+        print("Feasibility : [ 0,", feasi, "]")
+        return feasi
 
 
 class EDF(Algo):
+    """
+    Scheduling algorithms earliest deadline first
+    """
     def __init__(self, tasks):
         super().__init__(tasks)
 
     def feasibility(self):
         if super().verifySynchronous():
-            return super().idleInstant() + 1
+            feasi = super().idleInstant()
         else:
             feasi = super().getOmax() + super().getP() * 2
-            return feasi + 1
+        print("Feasibility : [ 0,", feasi, "]")
+        return feasi + 1
+
+
 
     def run(self, scheduler):
         feasibility = self.feasibility()

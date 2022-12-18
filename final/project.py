@@ -28,7 +28,6 @@ def run(algo, res, heuristic, order, cores_number):
     lcm = leastCommonMultiple(res[1])
     partitioner = Partitioner(res[0], heuristic, order, lcm, cores_number)
     partitioner.heuristicFunction()
-
     runPartitioner(algo, partitioner)
 
 
@@ -56,10 +55,26 @@ def leastCommonMultiple(period):
 
 
 if __name__ == '__main__':
-    algo = "rm"
-    heuristic = "wf"
-    order = "du" #DU DEFAULT VALUE
-    cores_number = 2
-    res = readFile("taskset.txt")  #une liste de task de type task
+    #./project <tasks_file> -m <#cores> -a edf|rm|dm [-h ff|wf|bf|nf] [-s du|iu]
+    heuristic = "ff" #default value
+    order = "du" #default value
+    #Value Mandatory
+    if sys.argv[2] == "-m":
+        cores = int(sys.argv[3])
+    else:
+        exit(5)
+    if sys.argv[4] == "-a":
+        algo = sys.argv[5]
+    else:
+        exit(5)
 
-    run(algo, res, heuristic, order, cores_number)
+    if sys.argv[6] == "-h":
+        heuristic = sys.argv[7]
+    if sys.argv[6] == "-s":
+        order = sys.argv[7]
+    if sys.argv[8] == "-s":
+        order = sys.argv[9]
+
+    #Start
+    res = readFile(sys.argv[1])
+    run(algo, res, heuristic, order, cores)

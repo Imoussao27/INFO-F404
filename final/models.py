@@ -1,4 +1,7 @@
 class Job:
+    """
+    Class Job for each task
+    """
     def __init__(self, task, id):
         self.task = task
         self.id = id
@@ -37,6 +40,9 @@ class Job:
                 self.task.setOldestJob(None)
 
 class Task:
+    """
+    Class Task
+    """
     def __init__(self, id, offset, wcet, deadline, period):
         self.id = id
         self.offset = offset
@@ -48,10 +54,15 @@ class Task:
         self.oldestJob = None
         self.jobs = []
 
-    def initJobs(self, limit):
+    def initJobs(self, feasibility):
+        """
+        Init jobs
+        :param feasibility: int feasibility
+        :return: None
+        """
         self.jobs = []
         i = 1
-        while self.offset + (i - 1) * self.period <= limit:
+        while self.offset + (i - 1) * self.period <= feasibility:
             self.jobs.append(Job(self, i))
             i += 1
 
