@@ -46,6 +46,12 @@ class Algo:
         deadline = self.getListDeadline()
         return max(deadline)
 
+    def getListOffset(self):
+        offset = []
+        for element in self.tasks:
+            offset.append(element.offset)
+        return offset
+
     def getListWCET(self):
         wcet = []
         for element in self.tasks:
@@ -104,6 +110,22 @@ class Algo:
                     if status == "deadline miss":
                         print(status, element)
 
+    def feasibility(self):
+        if self.verifySynchronous():
+            if self.isConstrained():
+                print("syncro constrained")
+                return self.getMaxDeadline() + 1
+            else:
+                print("syncro arbi")
+                return self.idleInstant() + 1
+
+        else:
+            if self.isConstrained():
+                print("Asyncro constrained")
+                return sum(self.getListOffset()) + self.getP() + 1
+            else:
+                print("/!/ Asyncrhonous arbitrary /!/")
+                exit(8)
 
 
 class RM(Algo):
@@ -130,24 +152,7 @@ class RM(Algo):
         return super().getPriority(liste)
 
     def feasibility(self):
-        if super().verifySynchronous():
-            if super().isConstrained():
-                print("syncro constrained")
-                return super().getMaxDeadline() + 1
-            else:
-                print("syncro arbi")
-                return super().idleInstant() + 1
-
-        else:
-            if super().isConstrained():
-                print("Asyncro constrained")
-            else:
-                print("asy arbi")
-                exit(8)
-        return 12
-
-    def priority(self):
-        pass
+        return super().feasibility()
 
 
 class DM(Algo):
@@ -174,9 +179,7 @@ class DM(Algo):
         return super().getPriority(liste)
 
     def feasibility(self):
-        if super().verifySynchronous():
-            return super().getMaxDeadline() + 1
-        return 12
+        return super().feasibility()
 
 
 
