@@ -1,7 +1,6 @@
 from math import ceil, lcm
 from operator import attrgetter
 
-
 class Algo:
     def __init__(self, tasks):
         self.tasks = tasks
@@ -121,7 +120,7 @@ class Algo:
                 return sum(self.getListOffset()) + self.getP() + 1
             else:
                 print("/!/ Asyncrhonous arbitrary /!/")
-                exit(8)
+                exit(2)
 
 
 class RM(Algo):
@@ -176,7 +175,6 @@ class DM(Algo):
 
     def feasibility(self):
         return super().feasibility()
-
 
 
 class EDF(Algo):

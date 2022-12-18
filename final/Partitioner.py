@@ -1,7 +1,6 @@
 from Scheduler import Scheduler
 from algos import RM, EDF, DM
 
-
 class Processor:
     def __init__(self, id):
         self.id = id
