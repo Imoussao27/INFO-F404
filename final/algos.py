@@ -21,17 +21,15 @@ class Algo:
         return lk
 
     def getOmax(self):
-        o_max = 0
+        omax = 0
         for task in self.tasks:
-            if o_max < task.offset:
-                o_max = task.offset
-        return o_max
+            if omax < task.offset:
+                omax = task.offset
+        return omax
 
     def getP(self):
-        period_list = []
-        for task in self.tasks:
-            period_list.append(task.period)
-        return lcm(*period_list)
+        period = self.getListPeriod()
+        return lcm(*period)
 
     def isConstrained(self):
         deadline = self.getListDeadline()

@@ -6,9 +6,6 @@ class Scheduler:
         self.algo = algos.Algo(tasks)
         self.allTasks = []
 
-    def get_configurations(self, t):
-        return [task.configuration(t) for task in self.tasks]
-
     def is_scheduling(self, limit):
         t1 = self.algo.getOmax() + self.algo.getP()
         t2 = self.algo.getOmax() + self.algo.getP() * 2
@@ -16,9 +13,9 @@ class Scheduler:
 
         for t in range(0, limit + 1):
             if t == t1:
-                conf1 = self.get_configurations(t1)
+                conf1 = [task.configuration(t1) for task in self.tasks]
             elif t == t2:
-                conf2 = self.get_configurations(t2)
+                conf2 = [task.configuration(t2) for task in self.tasks]
                 if conf1 != conf2:
                     return False
 
