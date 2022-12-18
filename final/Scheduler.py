@@ -1,4 +1,3 @@
-from math import lcm
 import algos
 
 class Scheduler:
@@ -7,25 +6,12 @@ class Scheduler:
         self.algo = algos.Algo(tasks)
         self.allTasks = []
 
-    def get_o_max(self):
-        o_max = 0
-        for task in self.tasks:
-            if o_max < task.offset:
-                o_max = task.offset
-        return o_max
-
-    def get_p(self):
-        period_list = []
-        for task in self.tasks:
-            period_list.append(task.period)
-        return lcm(*period_list)
-
     def get_configurations(self, t):
         return [task.configuration(t) for task in self.tasks]
 
     def is_scheduling(self, limit):
-        t1 = self.get_o_max() + self.get_p()
-        t2 = self.get_o_max() + self.get_p() * 2
+        t1 = self.algo.getOmax() + self.algo.getP()
+        t2 = self.algo.getOmax() + self.algo.getP() * 2
         jobs = self.algo.getListJobs(limit)
 
         for t in range(0, limit + 1):
