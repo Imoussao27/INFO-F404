@@ -23,7 +23,7 @@ class Processor:
         self.utilization -= task.utilization
 
     def isScheduling(self, lcm):
-        return self.scheduler.is_scheduling(lcm)
+        return self.scheduler.isScheduling(lcm)
 
     def schedule(self, algo):
         if algo == "rm":
