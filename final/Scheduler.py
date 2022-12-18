@@ -52,6 +52,8 @@ class Scheduler:
             running = False
             index = 0  #index for the list of jobs
             while not running and jobs and index < len(jobs):
+                if time == 1:
+                    print("times", time, "index", index)
                 p = 0 #index for the list of priority
                 while p < len(priority) and not running:
                     job = jobs[index]
@@ -65,6 +67,9 @@ class Scheduler:
                     if index == len(jobs):
                         index = 0
                         p += 1
+
+                    if p == len(priority): #Evitez une boucle à l'infini
+                        index = len(jobs)
 
                 index += 1
 

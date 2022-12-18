@@ -47,40 +47,28 @@ class Partitioner:
         self.lastProcessor = 0
         self.isPartitioned = True
 
-
-    def ff(self):
-        """
-        First fit
-        """
+    def heuristicFunction(self):
+        processor = 0
+        if self.heuristic == "nf":
+            processor = self.lastProcessor
+        # First Fit
         for task in self.tasks:
-            if not self.isPlaced(task, 0):
+            if not self.isPlaced(task, processor):
                 self.isPartitioned = False
+            # Worst fit
+            if self.heuristic == "wf":
+                self.processors.sort(key=lambda partition: partition.utilization)
 
-    def wf(self):
-        """
-        Worst fit
-        """
-        for task in self.tasks:
-            if not self.isPlaced(task, 0):
-                self.isPartitioned = False
-            self.processors.sort(key=lambda partition: partition.utilization)
+            # Best fit
+            if self.heuristic == "bf":
+                self.processors.sort(key=lambda partition: partition.utilization, reverse=True)
 
-    def bf(self):
-        """
-        Best fit
-        """
-        for task in self.tasks:
-            if not self.isPlaced(task, 0):
-                self.isPartitioned = False
-            self.processors.sort(key=lambda partition: partition.utilization, reverse=True)
+        # utilisation
 
-    def nf(self):
-        """
-        Next fit
-        """
-        for task in self.tasks:
-            if not self.isPlaced(task, self.lastProcessor):
-                self.isPartitioned = False
+        if self.sort == "du":
+            self.tasks.sort(key=lambda task: task.utilization, reverse=True)
+        else:  # iu
+            self.tasks.sort(key=lambda task: task.utilization)
 
     def isPlaced(self, task, current):
         copy = current
@@ -89,22 +77,10 @@ class Partitioner:
             self.processors[copy].addTask(task) #add task
             res = self.processors[copy].isScheduling(self.lcm) #verify scheduling
             task.reset()
-            if not res:
+            if res:
+                return True
+            else:
                 self.processors[copy].deleteTask()
                 copy += 1
-            else:
-                return True
         return False
 
-    def du(self):
-        """
-        Decreasing utilisation
-        """
-        self.tasks.sort(key=lambda task: task.utilization, reverse=True)
-
-    def iu(self):
-        """
-        Increasing utilisation
-        :return:
-        """
-        self.tasks.sort(key=lambda task: task.utilization)

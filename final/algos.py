@@ -117,6 +117,8 @@ class Algo:
 
         else:
             if self.isConstrained():
+                print('Asynchronous constrained')
+                print(sum(self.getListOffset()) + self.getP() + 1)
                 return sum(self.getListOffset()) + self.getP() + 1
             else:
                 print("/!/ Asyncrhonous arbitrary /!/")

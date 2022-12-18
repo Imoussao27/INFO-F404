@@ -27,8 +27,7 @@ def readFile(nameFile):
 def run(algo, res, heuristic, order, cores_number):
     lcm = leastCommonMultiple(res[1])
     partitioner = Partitioner(res[0], heuristic, order, lcm, cores_number)
-    switchOrder(partitioner, order)
-    switchHeuristic(partitioner, heuristic)
+    partitioner.heuristicFunction()
 
     runPartitioner(algo, partitioner)
 
@@ -44,12 +43,6 @@ def runPartitioner(algo, partitioner):
         exit(1)
 
 
-def switchHeuristic(partitioner, heuristic):
-    return getattr(partitioner, str(heuristic))()
-
-def switchOrder(partitioner, order):
-    return getattr(partitioner, str(order))()
-
 def leastCommonMultiple(period):
     """
     Function calculate least common multiple
@@ -64,8 +57,8 @@ def leastCommonMultiple(period):
 
 if __name__ == '__main__':
     algo = "rm"
-    heuristic = "ff"
-    order = "du"
+    heuristic = "wf"
+    order = "du" #DU DEFAULT VALUE
     cores_number = 2
     res = readFile("taskset.txt")  #une liste de task de type task
 
