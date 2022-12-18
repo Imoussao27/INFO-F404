@@ -31,7 +31,7 @@ def run(algo, res, heuristic, order, cores_number):
     switchHeuristic(partitioner, heuristic)
 
     if partitioner.is_partitioned():
-        for core in partitioner.get_cores():
+        for core in partitioner.get_processors():
             core.ToPrint()
             core.schedule(algo)
     else:

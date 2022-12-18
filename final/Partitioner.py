@@ -5,9 +5,9 @@ from algos import RM, EDF, DM
 class Processor:
     def __init__(self, id):
         """
-        A core class containing a tasks set
+        A processor class containing a tasks set
 
-        :param id: the core identifier and it is unique
+        :param id: the processor identifier and it is unique
         """
         self.id = id
         self.tasks = []
@@ -20,7 +20,7 @@ class Processor:
             res += "T{}, ".format(task.id)
         print("Processor {} : ".format(self.id) + res[:-1])
 
-    def add_task(self, task):
+    def addTask(self, task):
         self.tasks.append(task)
         self.utilization += task.utilization
 
@@ -49,31 +49,31 @@ class Processor:
 
 
 class Partitioner:
-    def __init__(self, tasks, heuristic, sort, lcm, cores_number):
+    def __init__(self, tasks, heuristic, sort, lcm, processors_number):
         self.heuristic = heuristic #ff wf bf nf
         self.sort = sort  #du iu
         self.lcm = lcm
         self.tasks = tasks #list of task
-        self.cores = [Processor(i + 1) for i in range(cores_number)]
-        self.sizeCore = len(self.cores)
-        self.last_core_used = 0
+        self.processors = [Processor(i + 1) for i in range(processors_number)]
+        self.sizeprocessor = len(self.processors)
+        self.last_processor_used = 0
         self.can_be_partitioned = True
 
     def is_partitioned(self):
         return self.can_be_partitioned
 
-    def get_cores(self):
-        return [core for core in self.cores if core.get_utilization() > 0]
+    def get_processors(self):
+        return [processor for processor in self.processors if processor.get_utilization() > 0]
 
     def can_be_placed(self, task, current):
         copy_current = current
-        while copy_current < self.sizeCore:
-            self.last_core_used = copy_current
-            self.cores[copy_current].add_task(task) #add task
-            res = self.cores[copy_current].is_scheduling(self.lcm) #verify scheduling
+        while copy_current < self.sizeprocessor:
+            self.last_processor_used = copy_current
+            self.processors[copy_current].addTask(task) #add task
+            res = self.processors[copy_current].is_scheduling(self.lcm) #verify scheduling
             task.reset()
             if not res:
-                self.cores[copy_current].remove_task()
+                self.processors[copy_current].remove_task()
                 copy_current += 1
             else:
                 return True
@@ -94,7 +94,7 @@ class Partitioner:
         for task in self.tasks:
             if not self.can_be_placed(task, 0):
                 self.can_be_partitioned = False
-            self.cores.sort(key=lambda partition: partition.utilization)
+            self.processors.sort(key=lambda partition: partition.utilization)
 
     def bf(self):
         """
@@ -103,14 +103,14 @@ class Partitioner:
         for task in self.tasks:
             if not self.can_be_placed(task, 0):
                 self.can_be_partitioned = False
-            self.cores.sort(key=lambda partition: partition.utilization, reverse=True)
+            self.processors.sort(key=lambda partition: partition.utilization, reverse=True)
 
     def nf(self):
         """
         Next fit
         """
         for task in self.tasks:
-            if not self.can_be_placed(task, self.last_core_used):
+            if not self.can_be_placed(task, self.last_processor_used):
                 self.can_be_partitioned = False
 
     def du(self):
