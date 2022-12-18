@@ -57,7 +57,7 @@ def leastCommonMultiple(period):
 
 
 if __name__ == '__main__':
-    algo = "RM" #TODO: HOW METTRE MAJ
+    algo = "rm"
     heuristic = "ff"
     order = "du"
     cores_number = 2

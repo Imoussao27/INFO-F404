@@ -107,6 +107,7 @@ class Algo:
                         oldtime = time
                     if status == "deadline miss":
                         print(status, element)
+                        exit(4)
 
     def feasibility(self):
         if self.verifySynchronous():

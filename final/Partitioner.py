@@ -4,15 +4,10 @@ from algos import RM, EDF, DM
 
 class Processor:
     def __init__(self, id):
-        """
-        A processor class containing a tasks set
-
-        :param id: the processor identifier and it is unique
-        """
         self.id = id
         self.tasks = []
         self.utilization = 0
-        self.scheduler = Scheduler(self.tasks) #TODO: call the good algo
+        self.scheduler = Scheduler(self.tasks)
 
     def ToPrint(self):
         res = ""
@@ -24,18 +19,12 @@ class Processor:
         self.tasks.append(task)
         self.utilization += task.utilization
 
-    def remove_task(self):
+    def deleteTask(self):
         task = self.tasks.pop()
         self.utilization -= task.utilization
 
-    def get_utilization(self):
-        return self.utilization
-
-    def get_tasks(self):
-        return self.tasks
-
-    def is_scheduling(self, limit):
-        return self.scheduler.is_scheduling(limit)
+    def isScheduling(self, lcm):
+        return self.scheduler.is_scheduling(lcm)
 
     def schedule(self, algo):
         if algo == "rm":
@@ -63,17 +52,17 @@ class Partitioner:
         return self.can_be_partitioned
 
     def get_processors(self):
-        return [processor for processor in self.processors if processor.get_utilization() > 0]
+        return [processor for processor in self.processors if processor.utilization > 0]
 
     def can_be_placed(self, task, current):
         copy_current = current
         while copy_current < self.sizeprocessor:
             self.last_processor_used = copy_current
             self.processors[copy_current].addTask(task) #add task
-            res = self.processors[copy_current].is_scheduling(self.lcm) #verify scheduling
+            res = self.processors[copy_current].isScheduling(self.lcm) #verify scheduling
             task.reset()
             if not res:
-                self.processors[copy_current].remove_task()
+                self.processors[copy_current].deleteTask()
                 copy_current += 1
             else:
                 return True
