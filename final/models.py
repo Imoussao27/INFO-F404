@@ -2,32 +2,37 @@ class Job:
     def __init__(self, task, id):
         self.task = task
         self.id = id
-        self.offset = task.offset + (id - 1) * task.period
+        self.offset = self.initOffset()
         self.wcet = task.wcet
-        self.deadline = task.offset + (id - 1) * task.period + task.deadline
+        self.deadline = self.initDeadline()
+        self.period = task.period
+        self.timeWCET = self.wcet
         self.state = False
-        self.time_remaining = self.wcet
+
 
     def idToString(self):
         return "T{}J{}".format(self.task.id, self.id)
 
-    def get_cumulative_time(self):
-        return self.wcet - self.time_remaining
+    def getAllTime(self):
+        return self.wcet - self.timeWCET
 
-    def decrease(self):
-        self.time_remaining -= 1
+    def initOffset(self):
+        return self.task.offset + (self.id - 1) * self.task.period
+
+    def initDeadline(self):
+        return self.task.offset + (self.id - 1) * self.task.period + self.task.deadline
 
     def startJob(self):
-        self.decrease()
+        self.timeWCET -= 1
         self.task.setOldest_active_job(self)
         if self.state == False:
-            self.task.increaseActive_jobs()
+            self.task.active_jobs += 1
             self.state = None
 
         #STOP JOB
-        if self.time_remaining == 0:
+        if self.timeWCET == 0:
             self.state = True
-            self.task.decreaseActive_jobs()
+            self.task.active_jobs -= 1
             if self.task.oldest_active_job.idToString() == self.id:
                 self.task.setOldest_active_job(None)
 
@@ -54,12 +59,6 @@ class Task:
         if not self.oldest_active_job:
             self.oldest_active_job = job
 
-    def increaseActive_jobs(self):
-        self.active_jobs += 1
-
-    def decreaseActive_jobs(self):
-        self.active_jobs -= 1
-
     def reset(self):
         self.active_jobs = 0
         self.oldest_active_job = None
@@ -67,6 +66,6 @@ class Task:
     def configuration(self, t):
         gamma = (t - self.offset) % self.period if t >= self.offset else t - self.offset
         alpha = self.active_jobs
-        beta = 0 if alpha == 0 else self.oldest_active_job.get_cumulative_time()
+        beta = 0 if alpha == 0 else self.oldest_active_job.getAllTime()
 
         return gamma, alpha, beta
