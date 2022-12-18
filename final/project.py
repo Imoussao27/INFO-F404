@@ -30,13 +30,19 @@ def run(algo, res, heuristic, order, cores_number):
     switchOrder(partitioner, order)
     switchHeuristic(partitioner, heuristic)
 
-    if partitioner.is_partitioned():
-        for core in partitioner.get_processors():
+    runPartitioner(algo, partitioner)
+
+
+def runPartitioner(algo, partitioner):
+    parti = [processor for processor in partitioner.processors if processor.utilization > 0]
+    if partitioner.isPartitioned:
+        for core in parti:
             core.ToPrint()
             core.schedule(algo)
     else:
         print("The partitioning fails")
         exit(1)
+
 
 def switchHeuristic(partitioner, heuristic):
     return getattr(partitioner, str(heuristic))()

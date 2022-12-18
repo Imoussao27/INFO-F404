@@ -44,44 +44,25 @@ class Partitioner:
         self.tasks = tasks #list of task
         self.processors = [Processor(i + 1) for i in range(processors_number)]
         self.sizeprocessor = len(self.processors)
-        self.last_processor_used = 0
-        self.can_be_partitioned = True
+        self.lastProcessor = 0
+        self.isPartitioned = True
 
-    def is_partitioned(self):
-        return self.can_be_partitioned
-
-    def get_processors(self):
-        return [processor for processor in self.processors if processor.utilization > 0]
-
-    def can_be_placed(self, task, current):
-        copy_current = current
-        while copy_current < self.sizeprocessor:
-            self.last_processor_used = copy_current
-            self.processors[copy_current].addTask(task) #add task
-            res = self.processors[copy_current].isScheduling(self.lcm) #verify scheduling
-            task.reset()
-            if not res:
-                self.processors[copy_current].deleteTask()
-                copy_current += 1
-            else:
-                return True
-        return False
 
     def ff(self):
         """
         First fit
         """
         for task in self.tasks:
-            if not self.can_be_placed(task, 0):
-                self.can_be_partitioned = False
+            if not self.isPlaced(task, 0):
+                self.isPartitioned = False
 
     def wf(self):
         """
         Worst fit
         """
         for task in self.tasks:
-            if not self.can_be_placed(task, 0):
-                self.can_be_partitioned = False
+            if not self.isPlaced(task, 0):
+                self.isPartitioned = False
             self.processors.sort(key=lambda partition: partition.utilization)
 
     def bf(self):
@@ -89,8 +70,8 @@ class Partitioner:
         Best fit
         """
         for task in self.tasks:
-            if not self.can_be_placed(task, 0):
-                self.can_be_partitioned = False
+            if not self.isPlaced(task, 0):
+                self.isPartitioned = False
             self.processors.sort(key=lambda partition: partition.utilization, reverse=True)
 
     def nf(self):
@@ -98,8 +79,22 @@ class Partitioner:
         Next fit
         """
         for task in self.tasks:
-            if not self.can_be_placed(task, self.last_processor_used):
-                self.can_be_partitioned = False
+            if not self.isPlaced(task, self.lastProcessor):
+                self.isPartitioned = False
+
+    def isPlaced(self, task, current):
+        copy = current
+        while copy < self.sizeprocessor:
+            self.lastProcessor = copy
+            self.processors[copy].addTask(task) #add task
+            res = self.processors[copy].isScheduling(self.lcm) #verify scheduling
+            task.reset()
+            if not res:
+                self.processors[copy].deleteTask()
+                copy += 1
+            else:
+                return True
+        return False
 
     def du(self):
         """
